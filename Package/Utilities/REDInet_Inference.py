@@ -7,7 +7,6 @@ from tqdm import tqdm
 from multiprocessing import Pool
 from sklearn.preprocessing import OneHotEncoder
 from  tensorflow import keras
-from tqdm import tqdm
 
 class inference():
     
@@ -288,7 +287,6 @@ else:
             os.mkdir(results_path)
     except:
         sys.exit("Invalid --O value.")
-
 
 coverage_threshold = args.C
 if coverage_threshold <= 0:
