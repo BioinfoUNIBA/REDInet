@@ -160,21 +160,11 @@ class inference():
         if self.Multiprocessing == "yes":
 
             Inputs = []
-            if type(self.Files_names) =="str":
-                for Name in os.listdir(self.Data_path):
-                    if Name.find(".tbi") == -1:
-                        Inputs.append(Name.replace(".gz", ""))
-            else:
-                for Name in self.Files_names:
-                    if Name.find(".gz") !=-1:
-                    	if os.path.isfile(os.path.join(self.Data_path, Name)):
-                            Inputs.append(Name.replace(".gz", ""))
-                    	else:
-                            sys.exit(f"{Name} file doesen't exist")
-                    else:
-                        sys.exit(f"{Name} is an incorrect file name")
-      
-            with Pool(processes) as pool:
+            
+            for Name in self.Files_names:
+                Inputs.append(Name.replace(".gz", ""))
+                
+            with Pool(self.Processes) as pool:
                 for metadata, features, Name in pool.map(self.extraction, Inputs):
                     
                     starttime_preds = datetime.now()
@@ -199,41 +189,34 @@ class inference():
                     
         else:
             
-            if type(self.Files_names) =="str":
-                Names = os.listdir(self.Data_path)
-            else:
-                Names = self.Files_names
-    
+            Names = self.Files_names
+            
             for Name in Names:
-                if Name.find(".gz") !=-1:
-                    if os.path.isfile(os.path.join(self.Data_path, Name)):
+                
+                metadata, features, Name = self.extraction(Name.replace(".gz", ""))
+                
+                starttime_preds = datetime.now()
+                print(f"Inference on {Name} sample start", flush=True)
 
-                        metadata, features, Name = self.extraction(Name.replace(".gz", ""))
+                features = self.from_2_to_3_dimensions(features)
+                features = self.log_preprocessing(features)
+                y_hat_proba = model.predict(features, batch_size=512, verbose=1)
 
-                        starttime_preds = datetime.now()
-                        print(f"Inference on {Name} sample start", flush=True)
+                metadata["Not_Editing_Probability"] = 1.0 - y_hat_proba
+                metadata["Editing_Probability"] = y_hat_proba
 
-                        features = self.from_2_to_3_dimensions(features)
-                        features = self.log_preprocessing(features)
-                        y_hat_proba = model.predict(features, batch_size=512, verbose=1)
-
-                        metadata["Not_Editing_Probability"] = 1.0 - y_hat_proba
-                        metadata["Editing_Probability"] = y_hat_proba
-
-                        predictions = []
-                        for x in  y_hat_proba:
-                            if x > 0.5:
-                                predictions.append("Editing")
-                            else:
-                                predictions.append("Not_Editing")
-                        metadata["Predicted_Class"] = predictions
-
-                        metadata.to_csv(os.path.join(self.Results_path, f"{Name}_predictions.txt"), sep="\t", index=None)
-                        print(f"[{datetime.now()}] Inference on {Name} sample ended. Elapsed time {datetime.now()-starttime_preds}.", flush=True)
+                predictions = []
+                for x in  y_hat_proba:
+                    if x > 0.5:
+                        predictions.append("Editing")
                     else:
-                        sys.exit(f"{Name} file doesen't exist")
-                else:
-                    sys.exit(f"{Name} is an incorrect file name")
+                        predictions.append("Not_Editing")
+                metadata["Predicted_Class"] = predictions
+
+                metadata.to_csv(os.path.join(self.Results_path, f"{Name}_predictions.txt"), sep="\t", index=None)
+                print(f"[{datetime.now()}] Inference on {Name} sample ended. Elapsed time {datetime.now()-starttime_preds}.", flush=True)
+
+                                                                        
 
 
 s = ("A-to-I RNA editing identification in RNAseq data from REDItools tabix-indexed files.\n"
@@ -307,17 +290,13 @@ else:
 
 if args.N != "default":
     files_names = args.N.replace("[", "").replace("]", "").split(",")
-    state = False
     for file_name in files_names:
+        if file_name.find(".gz") ==-1:
+            sys.exit(f"{file_name} is an incorrect file name.")
         if not os.path.isfile(os.path.join(data_path, file_name)):
-            state = True
-            print(f"{file_name} is missing in the input folder.", flush=True)
+            sys.exit(f"{file_name} is missing in the input folder.")
         if not os.path.isfile(os.path.join(data_path, file_name+".tbi")):
-            state = True
-            print(f"{file_name+".tbi"} is missing in the input folder.", flush=True)
-    if state:
-        sys.exit("Change the files list/input directory or upload the missing files in the input directory.")
-    del state
+            sys.exit(f"{file_name+".tbi"} is missing in the input folder.")
 else:
     files_names = glob.glob(os.path.join(data_path, "*.gz"))
     if not files_names:
