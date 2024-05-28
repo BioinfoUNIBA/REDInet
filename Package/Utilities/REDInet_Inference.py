@@ -279,15 +279,6 @@ else:
     if not os.path.isdir(data_path):
         sys.exit("Invalid --I value.")
         
-gzs = glob(os.path.join(data_path, "*.gz"))
-if not gzs:
-    sys.exit("No .gz file in the input folder")
-else:
-    for gz in gzs:
-        if not os.path.isfile(os.path.join(data_path, gz+".tbi")):
-            sys.exit("Missing .tbi file in the input folder")
-del gzs
-
 if args.O == "default":
     results_path = utilities_path.replace("Utilities", "Results")
 else:
@@ -317,7 +308,27 @@ else:
 
 if args.N != "default":
     files_names = args.N.replace("[", "").replace("]", "").split(",")
-
+    state = False
+    for file_name in files_names:
+        if not os.path.isfile(os.path.join(data_path, file_name)):
+            state = True
+            print(f"{file_name} is missing in the input folder.", flush=True)
+        if not os.path.isfile(os.path.join(data_path, file_name+".tbi")):
+            state = True
+            print(f"{file_name+".tbi"} is missing in the input folder.", flush=True)
+    if state:
+        sys.exit("Change the files list or upload the missing files in the input directory or change dhe input directory.")
+    del state
+else:
+    gzs = glob(os.path.join(data_path, "*.gz"))
+    if not gzs:
+        sys.exit("No .gz file in the input folder.")
+    else:
+        for gz in gzs:
+            if not os.path.isfile(os.path.join(data_path, gz+".tbi")):
+                sys.exit(f"Missing {gz}.tbi file in the input folder.")
+    del gzs
+    
 inference(coverage_threshold, frequence_threshold, adenines_min, multiprocessing, 
           processes, utilities_path, data_path, results_path, files_names).make_predictions()
 
