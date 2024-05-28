@@ -4,6 +4,7 @@ import tensorflow as tf
 import os, sys, pysam, gzip, subprocess, shlex, time, argparse
 from datetime import datetime
 from tqdm import tqdm
+from glob import glob
 from multiprocessing import Pool
 from sklearn.preprocessing import OneHotEncoder
 from  tensorflow import keras
@@ -277,7 +278,16 @@ else:
     data_path = args.I
     if not os.path.isdir(data_path):
         sys.exit("Invalid --I value.")
-    
+        
+gzs = glob(os.path.join(data_path, "*.gz"))
+if not gzs:
+    sys.exit("No .gz file in the input folder")
+else:
+    for gz in gzs:
+        if not os.path.isfile(os.path.join(data_path, gz+".tbi")):
+            sys.exit("Missing .tbi file in the input folder")
+del gzs
+
 if args.O == "default":
     results_path = utilities_path.replace("Utilities", "Results")
 else:
