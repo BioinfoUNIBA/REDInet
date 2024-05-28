@@ -142,8 +142,10 @@ class inference():
         columns = ["Region", "Position", "Reference_Base", "Strand", "AG_Sub_Frequency", 
                              "Bases_Counts", "Start", "Stop", "TabixLen"]
         
-        intervals.columns = columns
-        incompleates.columns = columns
+        if intervals.shape[0]>0:
+            intervals.columns = columns
+        if incompleates.shape[0]>0:
+            incompleates.columns = columns
         incompleates.to_csv(os.path.join(self.Results_path, f"{name}_incompleates.txt"), sep="\t", index=None)
         del incompleates
         
@@ -169,21 +171,22 @@ class inference():
                     
                     starttime_preds = datetime.now()
                     print(f"Inference on {Name} sample start", flush=True)
-                    
-                    features = self.from_2_to_3_dimensions(features)
-                    features = self.log_preprocessing(features)
-                    y_hat_proba = model.predict(features, batch_size=512, verbose=1)
-                    
-                    metadata["Not_Editing_Probability"] = 1.0 - y_hat_proba
-                    metadata["Editing_Probability"] = y_hat_proba
-                    predictions = []
-                    for x in  y_hat_proba:
-                        if x > 0.5:
-                            predictions.append("Editing")
-                        else:
-                            predictions.append("Not_Editing")
-                    metadata["Predicted_Class"] = predictions 
-                    
+
+                    if metadata.shape[0]>0:
+                        features = self.from_2_to_3_dimensions(features)
+                        features = self.log_preprocessing(features)
+                        y_hat_proba = model.predict(features, batch_size=512, verbose=1)
+                        
+                        metadata["Not_Editing_Probability"] = 1.0 - y_hat_proba
+                        metadata["Editing_Probability"] = y_hat_proba
+                        predictions = []
+                        for x in  y_hat_proba:
+                            if x > 0.5:
+                                predictions.append("Editing")
+                            else:
+                                predictions.append("Not_Editing")
+                        metadata["Predicted_Class"] = predictions 
+                        
                     metadata.to_csv(os.path.join(self.Results_path, f"{Name}_predictions.txt"), sep="\t", index=None)
                     print(f"[{datetime.now()}] Inference on {Name} sample ended. Elapsed time {datetime.now()-starttime_preds}.", flush=True)
                     
@@ -197,21 +200,22 @@ class inference():
                 
                 starttime_preds = datetime.now()
                 print(f"Inference on {Name} sample start", flush=True)
-
-                features = self.from_2_to_3_dimensions(features)
-                features = self.log_preprocessing(features)
-                y_hat_proba = model.predict(features, batch_size=512, verbose=1)
-
-                metadata["Not_Editing_Probability"] = 1.0 - y_hat_proba
-                metadata["Editing_Probability"] = y_hat_proba
-
-                predictions = []
-                for x in  y_hat_proba:
-                    if x > 0.5:
-                        predictions.append("Editing")
-                    else:
-                        predictions.append("Not_Editing")
-                metadata["Predicted_Class"] = predictions
+                
+                if metadata.shape[0]>0:
+                    features = self.from_2_to_3_dimensions(features)
+                    features = self.log_preprocessing(features)
+                    y_hat_proba = model.predict(features, batch_size=512, verbose=1)
+    
+                    metadata["Not_Editing_Probability"] = 1.0 - y_hat_proba
+                    metadata["Editing_Probability"] = y_hat_proba
+    
+                    predictions = []
+                    for x in  y_hat_proba:
+                        if x > 0.5:
+                            predictions.append("Editing")
+                        else:
+                            predictions.append("Not_Editing")
+                    metadata["Predicted_Class"] = predictions
 
                 metadata.to_csv(os.path.join(self.Results_path, f"{Name}_predictions.txt"), sep="\t", index=None)
                 print(f"[{datetime.now()}] Inference on {Name} sample ended. Elapsed time {datetime.now()-starttime_preds}.", flush=True)
