@@ -1,13 +1,12 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import tensorflow as tf
-import os, sys, pysam, gzip, subprocess, shlex, time, argparse
+import argparse, glob, gzip, multiprocessing, os, pysam, shlex, subprocess, sys, time
 from datetime import datetime
-from tqdm import tqdm
-from glob import glob
 from multiprocessing import Pool
 from sklearn.preprocessing import OneHotEncoder
-from  tensorflow import keras
+from tensorflow import keras
+from tqdm import tqdm
 
 class inference():
     
@@ -278,7 +277,7 @@ else:
     data_path = args.I
     if not os.path.isdir(data_path):
         sys.exit("Invalid --I value.")
-        
+    
 if args.O == "default":
     results_path = utilities_path.replace("Utilities", "Results")
 else:
@@ -299,9 +298,9 @@ adenines_min = args.M
 if adenines_min <= 0:
     sys.exit("Invalid --M value.")
 
-multiprocessing = args.P
+MultiProcessing = args.P
 
-if multiprocessing == "yes":
+if MultiProcessing == "yes":
     processes = multiprocessing.cpu_count()
 else:
     processes = 1
@@ -317,19 +316,18 @@ if args.N != "default":
             state = True
             print(f"{file_name+".tbi"} is missing in the input folder.", flush=True)
     if state:
-        sys.exit("Change the files list or upload the missing files in the input directory or change dhe input directory.")
+        sys.exit("Change the files list/input directory or upload the missing files in the input directory.")
     del state
 else:
-    gzs = glob(os.path.join(data_path, "*.gz"))
-    if not gzs:
+    files_names = glob.glob(os.path.join(data_path, "*.gz"))
+    if not files_names:
         sys.exit("No .gz file in the input folder.")
     else:
-        for gz in gzs:
-            if not os.path.isfile(os.path.join(data_path, gz+".tbi")):
-                sys.exit(f"Missing {gz}.tbi file in the input folder.")
-    del gzs
-    
-inference(coverage_threshold, frequence_threshold, adenines_min, multiprocessing, 
+        for file_name in files_names:
+            if not os.path.isfile(os.path.join(data_path, file_name+".tbi")):
+                sys.exit(f"Missing {file_name}.tbi file in the input folder.")
+
+inference(coverage_threshold, frequence_threshold, adenines_min, MultiProcessing, 
           processes, utilities_path, data_path, results_path, files_names).make_predictions()
 
 print("\nExecution end.", flush=True)
