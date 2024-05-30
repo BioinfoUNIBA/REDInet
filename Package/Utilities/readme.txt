@@ -26,6 +26,6 @@ The reference genomes must be decompresed and indexed with samtools using the fo
     1) bgzip -d <compressed reference genome file name>
     1) samtools faidx <reference genome fasta file name>
     3 <reference genome fasta file name> must be: GRCh38.primary_assembly.genome.fa or GRCh37.primary_assembly.genome.fa
-To make prediction on the REDItools tabix-indexed output tables run the following commands:
+To make prediction on the REDItools tabix-indexed output tables with the REDInet.h5 model run the following commands:
     1) conda activate <environment name>
     2) python3 REDInet_Inference.py <OPTIONS>
