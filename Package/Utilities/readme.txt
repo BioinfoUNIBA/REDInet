@@ -31,4 +31,4 @@ To know all the REDInet_Inference.py available options run the following command
      python3 REDInet_Inference.py -h
 To make prediction on the REDItools tabix-indexed output tables with the REDInet.h5 model run the following commands:
      conda activate <environment name>
-     python3 REDInet_Inference.py <OPTIONS>
+     python3 REDInet_Inference.py <OPTIONS> (or python3 REDInet_Inference.py for the default setting)
