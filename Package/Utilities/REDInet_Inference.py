@@ -227,7 +227,7 @@ class inference():
                       
     def make_predictions(self)->None:
         
-        model = tf.keras.models.load_model(os.path.join(self.Utilities_path, "REDInet_log_preprocessing_pos_zeros_snps_29_02_2024_22_25_45.h5"))
+        model = tf.keras.models.load_model(os.path.join(self.Utilities_path, "REDInet.h5"))
         
         if self.Multiprocessing == "yes":
 
