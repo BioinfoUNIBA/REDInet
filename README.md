@@ -24,7 +24,7 @@ To create a the required enviroment:
 
        conda install bioconda::samtools (or conda install bioconda/label/cf201901::samtools)
 
-6) Dowload and Install REDItools 3. Package and installation guide at: <br />
+6) Dowload and install REDItools 3. Package and installation guide at: <br />
 
        https://github.com/BioinfoUNIBA/REDItools3
 
