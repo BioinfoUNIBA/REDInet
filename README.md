@@ -99,37 +99,41 @@ This is the list of available parameters that can be set: <br />
                        this package.
                        
     --C                Minimum number of RNAseq reads mapping in the positions
-                       to be analyzed.Value must be a natural number greater
-                       than zero.By defalult the value is 50.
+                       to be analyzed. Value must be a natural number greater
+                       than zero. By defalult the value is 50.
                        
     --F                Minimun percentage of A to G substitutions in the positions
-                       to be analyzed.Value must be a floating point number
-                       grater than zero.By default the value is 0.01.
+                       to be analyzed. Value must be a floating point number
+                       grater than zero. By default the value is 0.01.
                        
     --M                Minimum detected guanosines number in place of adenines
-                       in the positions to be analyzed.Value must be a natural
-                       number greater than zero.By default the value is 3.
+                       in the positions to be analyzed. Value must be a natural
+                       number greater than zero. By default the value is 3.
                        
-    --N                Compleate list of .gz files to be analyzed.List must be
+    --N                Compleate list of .gz files to be analyzed. List must be
                        included in box brackets and names must be separated by
                        commas without spaces.
                        Es:[data1.gz,data2.gz,data3.gz]. By default the
                        tool analyze all the .gz files in the input directory.
                        
     --P                Choose whether to work with multiprocessing or
-                       not.Possible choices are: yes or no.By default is no.
+                       not. Possible choices are: yes or no. By default is no.
                        
     --G                Choose to accept sequences with maximum 30 missing
-                       nucleotides.Possible choices are: yes or no.By default
+                       nucleotides. Possible choices are: yes or no. By default
                        is no.
                        
     --A                Human genome assembly to use in handling missing
-                       nucleotides.Possible choices are: GRCh37 or GRCh38.By
+                       nucleotides. Possible choices are: GRCh37 or GRCh38. By
                        default is GRCh37.
                        
     --S                Number of missing nucleotides to be imputed. Value must
                        be an integer number grater than zero and equal or
-                       smaller than 30.By default the value is 10.
+                       smaller than 30. By default the value is 10.
 
+## **Notes**:
+REDInet is compatible with all the older versions of REDItools.
+It's suggested to produce the BAM files via the REDItools protocol at:
 
+     https://www.nature.com/articles/s41596-019-0279-7
 
