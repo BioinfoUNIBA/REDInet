@@ -4,7 +4,7 @@ A Temporal Convolutional Network based Python package for the detection of A-to-
 ## **Required Softwares**:
 REDInet runs on Tabix indexed REDItools output tables. Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environment. 
 To create a the required enviroment:
-1) Install Anaconda or Miniconda following the instructions: <br />
+1) Install Anaconda or Miniconda following the instructions at: <br />
   Anaconda <br />
             
             https://docs.anaconda.com/free/anaconda/install/linux 
@@ -20,11 +20,11 @@ To create a the required enviroment:
 
        conda activate REDINET
 
-5) Installing Samtools: <br />
+5) Install Samtools: <br />
 
        conda install bioconda::samtools (or conda install bioconda/label/cf201901::samtools)
 
-6) Dowload REDItools 3 package ed installation guide from: <br />
+6) Dowload and Install REDItools 3. Package and installation guide at: <br />
 
        https://github.com/BioinfoUNIBA/REDItools3
 
