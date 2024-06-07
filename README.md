@@ -2,7 +2,7 @@
 A Temporal Convolutional Network based Python package for the detection of A-to-I RNA editing events in RNA sequencing experiments.
 
 ## **Required Softwares**:
-REDInet runs on REDItools output tables. Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environment. 
+REDInet runs on Tabix indexed REDItools output tables. Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environment. 
 To create a the required enviroment:
 1) Install Anaconda or Miniconda following the instructions: <br />
   Anaconda <br />
@@ -11,7 +11,23 @@ To create a the required enviroment:
    
      Miniconda <br />
             
-            https://docs.anaconda.com/free/miniconda/miniconda-install 
+            https://docs.anaconda.com/free/miniconda/miniconda-install
+2) Create the virtual environment with Python version 3.9.0: <br />
+
+       conda create --name REDInet python=3.9.0
+   
+4) Activate the virtual environment: <br />
+
+       conda activate REDINET
+
+5) Installing Samtools: <br />
+
+       conda install bioconda::samtools (or conda install bioconda/label/cf201901::samtools)
+
+6) Dowload REDItools 3 package ed installation guide from: <br />
+
+       https://github.com/BioinfoUNIBA/REDItools3
+
   
 
 The action of every agent <br />
