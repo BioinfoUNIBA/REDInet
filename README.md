@@ -91,7 +91,7 @@ In the ../REDInet/Package/Data folder is provided 2 BAM files to run REDInet pip
        python3 REDInet_Inference.py  
             
 ## **REDInet Options**:
-REDInet settings can be tuned to accomodate specific analysis needs.
+REDInet settings can be tuned to accomodate specific analysis needs.  <br />
 This is the list of available parameters that can be set: <br />
 
     --I                Absolute path to the folder containing the files to be
@@ -135,8 +135,8 @@ This is the list of available parameters that can be set: <br />
                        smaller than 30. By default the value is 10.
 
 ## **Notes**:
-REDInet is compatible with all the older versions of REDItools.
-It's suggested to produce the BAM files via the REDItools protocol at:
+REDInet is compatible with all the older versions of REDItools.  <br />
+It's suggested to produce the BAM files via the REDItools protocol at:  <br />
 
      https://www.nature.com/articles/s41596-019-0279-7
 
