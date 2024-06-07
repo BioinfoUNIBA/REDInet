@@ -48,6 +48,9 @@ To create a the required enviroment:
        wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz
        bgzib -d GRCh37.primary_assembly.genome.fa.gz
        samtools faidx GRCh37.primary_assembly.genome.fa
+   
+10) Make REDInet_inference.py executable:
+
        cd ..
        
 ## **REDInet Usage**:
@@ -76,7 +79,7 @@ In the ../REDInet/Package/Data folder is provided 2 BAM files to run REDInet bas
 REDInet settings can be tuned to accomodate specific analysis needs.
 This is the list of available parameters that can be set: <br />
 
-    --I                Absolute path to the folder containing thefiles to be
+    --I                Absolute path to the folder containing the files to be
                        analyzed.By default is the Data folder in this package.
                        
     --O                Absolute path to the folder in which the results are
@@ -87,11 +90,11 @@ This is the list of available parameters that can be set: <br />
                        to be analyzed.Value must be a natural number greater
                        than zero.By defalult the value is 50.
                        
-    --F                Mimun percentage of AG substitutions in the positions
+    --F                Minimun percentage of A to G substitutions in the positions
                        to be analyzed.Value must be a floating point number
                        grater than zero.By default the value is 0.01.
                        
-    --M                Minimum detected guanosine number in place of adenines
+    --M                Minimum detected guanosines number in place of adenines
                        in the positions to be analyzed.Value must be a natural
                        number greater than zero.By default the value is 3.
                        
@@ -110,7 +113,7 @@ This is the list of available parameters that can be set: <br />
                        
     --A                Human genome assembly to use in handling missing
                        nucleotides.Possible choices are: GRCh37 or GRCh38.By
-                       default isGRCh37.
+                       default is GRCh37.
                        
     --S                Number of missing nucleotides to be imputed. Value must
                        be an integer number grater than zero and equal or
