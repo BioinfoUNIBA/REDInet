@@ -59,13 +59,13 @@ REDInet analysis is a 3 steps process.
 At the end of each step a file is automatically produced and stored in the choiced output directory. 
 1) Genomic positions are filtered on the basis of minimum base coverage, minimum A to G substitution rate and minimum number of guanosine in place of adenines.  <br />
    Information regarding genomig positions filtered out in this phase are stored in the file: <br />
-          <br /> ../<results folder>/<.gz name>_discarded.txt <br />
+          </br> ../<results folder>/<.gz name>_discarded.txt <br /> <br />
 3) Genomic positions filtered in in the previous phase are futher filtered for missing nucleotides in 101 nucleotides regions centered in them.  <br />
    Information regarding genomig positions filtered out in this phase are stored in the file: <br />
-          ../<results folder>/<.gz name>_incompleates.txt <br />
+          ../<results folder>/<.gz name>_incompleates.txt <br /> <br />
 3) Genomic positions filtered in in the previous phase are subjected to the classification by the pretrained Deep Neural Network.  <br />
    Information regarding the classified genomig positions are stored in the file: <br />
-          ../<results folder>/<.gz name>_predictions.txt <br />
+          ../<results folder>/<.gz name>_predictions.txt <br /> <br />
 
   
 ## **REDInet Usage**:
