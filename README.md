@@ -22,7 +22,7 @@ To create a the required enviroment:
 
 4) Install Samtools: <br />
 
-       conda install bioconda::samtools (or conda install bioconda/label/cf201901::samtools)
+       conda install bioconda::samtools 
 
 5) Install python required packages: <br />
 
