@@ -10,7 +10,7 @@ REDInet runs on REDItools output tables. Both REDInet and REDItools should be in
   Miniconda <br />
             
             https://docs.anaconda.com/free/miniconda/miniconda-install 
-<br />
+  <br />
 
 The action of every agent <br />
   into the world <br />
