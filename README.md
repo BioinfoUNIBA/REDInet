@@ -50,6 +50,6 @@ To create a the required enviroment:
        samtools faidx GRCh37.primary_assembly.genome.fa
        cd ..
        
-## **REDInet Basic Usage**:
+## **REDInet Usage**:
 REDInet classifies A to G substitutions, in RNAseq data, as derived from A-to-I RNA editing or not.  
-The pipeline require BAM files:
+The basic REDInet pipeline requires BAM files to be prepared via REDItoolDnaRNA.py script:
