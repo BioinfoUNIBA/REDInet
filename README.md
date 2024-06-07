@@ -1,5 +1,5 @@
 # REDInet
-A Temporal Convolutional Network based Python package, inspired by Google DeepMind' WaveNet, A-to-I RNA editing events detection in RNA sequencing experiments.
+A Temporal Convolutional Network based Python package, inspired by Google DeepMind' WaveNet, for A-to-I RNA editing events detection in RNA sequencing experiments.
 
 ## **Virtual Environment Preparation and Software Installation**:
 REDInet runs on Tabix indexed REDItools output tables. Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environment. 
