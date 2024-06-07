@@ -32,12 +32,24 @@ To create a the required enviroment:
 
        https://github.com/BioinfoUNIBA/REDItools3
    
-7) Create REDInet dedicated folder and REDInet package download: <br />
+7) Create a REDInet dedicated folder and REDInet package download: <br />
 
        mkdir REDInet
        cd REDInet
        wget https://github.com/BioinfoUNIBA/REDInet/tree/main/Package
+       cd Package
+   
+9) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
 
+       cd Utilities
+       wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh38.primary_assembly.genome.fa.gz
+       bgzib -d GRCh38.primary_assembly.genome.fa.gz
+       samtools faidx GRCh38.primary_assembly.genome.fa
+       wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz
+       bgzib -d GRCh37.primary_assembly.genome.fa.gz
+       samtools faidx GRCh37.primary_assembly.genome.fa
+       cd ..
+       
 ## **REDInet Basic Usage**:
-The C_to_U_classifier is able to ameliorate the C-to-U editing signal in direct-RNA Nanopore runs. 
-It does this by mean of two main pipelines:
+REDInet classifies A to G substitutions, in RNAseq data, as derived from A-to-I RNA editing or not.  
+The pipeline require BAM files:
