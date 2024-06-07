@@ -97,8 +97,8 @@ This is the list of available parameters that can be set: <br />
                        
     --N                Compleate list of .gz files to be analyzed.List must be
                        included in box brackets and names must be separated by
-                       commas without
-                       spaces.Es:[data1.gz,data2.gz,data3.gz].By default the
+                       commas without spaces.
+                       Es:[data1.gz,data2.gz,data3.gz]. By default the
                        tool analyze all the .gz files in the input directory.
                        
     --P                Choose whether to work with multiprocessing or
