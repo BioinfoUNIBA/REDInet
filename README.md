@@ -16,25 +16,25 @@ To create a the required enviroment:
 
        conda create --name REDInet python=3.9.0
    
-4) Activate the virtual environment: <br />
+3) Activate the virtual environment: <br />
 
        conda activate REDInet
 
-5) Install Samtools: <br />
+4) Install Samtools: <br />
 
        conda install bioconda::samtools (or conda install bioconda/label/cf201901::samtools)
 
-6) Install python required packages:
+5) Install python required packages: <br />
 
        pip install numpy pandas pysam scikit-learn tqdm tensorflow[and-cuda]==2.14.0
    
-8) Create REDInet dedicated folder and REDInet package download:
+6) Create REDInet dedicated folder and REDInet package download: <br />
 
        mkdir REDInet
        cd REDInet
        wget https://github.com/BioinfoUNIBA/REDInet/tree/main/Package
 
-10) Dowload and install REDItools 3. Package and installation guide at: <br />
+7) Dowload and install REDItools 3. Package and installation guide at: <br />
 
        https://github.com/BioinfoUNIBA/REDItools3
 
