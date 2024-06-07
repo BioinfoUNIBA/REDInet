@@ -3,14 +3,14 @@ A Temporal Convolutional Network based Python package for the detection of A-to-
 
 ## **Required Softwares**:
 REDInet runs on REDItools output tables. Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environment. \
-1)Install Anaconda or Miniconda following the instructions <br />
-   Anaconda <br />
+1) Install Anaconda or Miniconda following the instructions <br />
+  Anaconda <br />
             
             https://docs.anaconda.com/free/anaconda/install/linux
-   Miniconda <br />
+  Miniconda <br />
             
             https://docs.anaconda.com/free/miniconda/miniconda-install 
-
+<br />
 
 The action of every agent <br />
   into the world <br />
