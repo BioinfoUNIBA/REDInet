@@ -51,8 +51,19 @@ To create a the required enviroment:
    
 10) Make REDInet_inference.py executable:
 
-       cd ..
-       
+        chmod u+x REDInet_Inference.py
+        cd ..
+
+## **REDInet output**:
+REDInet analysis is a 3 steps process.  
+1) Genomic positions are filtered on the basis of minimum base coverage, minimum A to G substitution rate and minimum number of guanosine in place of adenines. Information regarding genomig positions filtered out in this phase are automatically stored in the file: <br />
+  ../<results folder>/<.gz name>_discarded.txt <br />
+3) Genomic positions filtered in in the previous phase are futher filtered for missing nucleotides in 101 nucleotides regions centered in them. Information regarding genomig positions filtered out in this phase are automatically stored in the file: <br />
+  ../<results folder>/<.gz name>_incompleates.txt <br />
+3) Genomic positions filtered in in the previous phase are subjected to the classification by the pretrained Deep Neural Network. Information regarding the classified genomig positions are automatically stored in the file: <br />
+  ../<results folder>/<.gz name>_predictions.txt <br />
+
+  
 ## **REDInet Usage**:
 REDInet classifies A to G substitutions, in RNAseq data, as derived from A-to-I RNA editing or not.  
 The REDInet pipeline requires BAM files to be prepared via REDItoolDnaRNA.py script from the REDItools3 package. 
@@ -119,14 +130,5 @@ This is the list of available parameters that can be set: <br />
                        be an integer number grater than zero and equal or
                        smaller than 30.By default the value is 10.
 
-## **REDInet output**:
-REDInet analysis is a 3 steps process.  
-1) Genomic positions are filtered on the basis of minimum base coverage, minimum A to G substitution rate and minimum number of guanosine in place of adenines. Information regarding genomig positions filtered out in this phase are automatically stored in the file: <br />
-  .._discarded.txt <br />
-3) Genomic posi: <br />
-4) Install Samtools: <br />
 
 
-The REDInet pipeline requires BAM files to be prepared via REDItoolDnaRNA.py script from the REDItools3 package. 
-In the ../REDInet/Package/Data folder is provided 2 BAM files to run REDInet pipeline as follows. 
-1) Launch the REDItoolDnaRNA.py onto the example BAM file with the following setting: <br />
