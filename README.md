@@ -12,7 +12,10 @@ REDInet runs on REDItools output tables. Both REDInet and REDItools should be in
             https://docs.anaconda.com/free/miniconda/miniconda-install 
 
 
-
+The action of every agent <br />
+  into the world <br />
+starts <br />
+  from their physical selves. <br />
 
 
 3) Create a new virtual environment (it's suggested to create, use and activate a base conda environment with all the required software):
