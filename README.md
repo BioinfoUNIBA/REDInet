@@ -7,9 +7,9 @@ To create a the required enviroment:
 1) Install Anaconda or Miniconda following the instructions: <br />
   Anaconda <br />
             
-            https://docs.anaconda.com/free/anaconda/install/linux  <br />
+            https://docs.anaconda.com/free/anaconda/install/linux 
    
-  Miniconda <br />
+     Miniconda <br />
             
             https://docs.anaconda.com/free/miniconda/miniconda-install 
   
