@@ -72,5 +72,46 @@ In the ../REDInet/Package/Data folder is provided 2 BAM files to run REDInet bas
        cd Utilities
        python3 REDInet_Inference.py  
             
-    
+## **REDInet Options**:
+REDInet settings can be tuned to accomodate specific analysis needs.
+
+   --I                 Absolute path to the folder containing thefiles to be
+                       analyzed.By default is the Data folder in this package.
+                       
+   --O                 Absolute path to the folder in which the results are
+                       going to be stored.By default is the Results folder in
+                       this package.
+                       
+  --C                  Minimum number of RNAseq reads mapping in the positions
+                       to be analyzed.Value must be a natural number greater
+                       than zero.By defalult the value is 50.
+                       
+  --F                  Mimun percentage of AG substitutions in the positions
+                       to be analyzed.Value must be a floating point number
+                       grater than zero.By default the value is 0.01.
+                       
+  --M                  Minimum detected guanosine number in place of adenines
+                       in the positions to be analyzed.Value must be a natural
+                       number greater than zero.By default the value is 3.
+                       
+  --N                  Compleate list of .gz files to be analyzed.List must be
+                       included in box brackets and names must be separated by
+                       commas without
+                       spaces.Es:[data1.gz,data2.gz,data3.gz].By default the
+                       tool analyze all the .gz files in the input directory.
+                       
+  --P {yes,no}         Choose whether to work with multiprocessing or
+                       not.Possible choices are: yes or no.By default is no.
+                       
+  --G {yes,no}         Choose to accept sequences with maximum 30 missing
+                       nucleotides.Possible choices are: yes or no.By default
+                       is no.
+                       
+  --A {GRCh37,GRCh38}  Human genome assembly to use in handling missing
+                       nucleotides.Possible choices are: GRCh37 or GRCh38.By
+                       default isGRCh37.
+                       
+  --S                  Number of missing nucleotides to be imputed. Value must
+                       be an integer number grater than zero and equal or
+                       smaller than 30.By default the value is 10.
 
