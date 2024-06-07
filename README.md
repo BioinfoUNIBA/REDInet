@@ -39,7 +39,7 @@ To create a the required enviroment:
        wget https://github.com/BioinfoUNIBA/REDInet/tree/main/Package
        cd Package
    
-9) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
+8) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
 
        cd Utilities
        wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh38.primary_assembly.genome.fa.gz
@@ -49,7 +49,7 @@ To create a the required enviroment:
        bgzib -d GRCh37.primary_assembly.genome.fa.gz
        samtools faidx GRCh37.primary_assembly.genome.fa
    
-10) Make REDInet_inference.py executable:
+9) Make REDInet_inference.py executable:
 
         chmod u+x REDInet_Inference.py
         cd ..
