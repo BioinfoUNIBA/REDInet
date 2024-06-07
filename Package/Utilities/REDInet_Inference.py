@@ -338,7 +338,7 @@ parser.add_argument("--O", type=str, default="default", help=("Absolute path to 
 parser.add_argument("--C", type=int, default=50, help=("Minimum number of RNAseq reads mapping in the positions to be analyzed."
                                                        "Value must be a natural number greater than zero."
                                                        "By defalult the value is 50."))
-parser.add_argument("--F", type=float, default=0.01, help=("Minimun percentage of A to G substitutions in the positions to be analyzed."
+parser.add_argument("--F", type=float, default=0.01, help=("Minimum percentage of A to G substitutions in the positions to be analyzed."
                                                            "Value must be a floating point number grater than zero."
                                                            "By default the value is 0.01."))
 parser.add_argument("--M", type=int, default=3, help=("Minimum detected guanosines number in place of adenines in the positions to be analyzed."
