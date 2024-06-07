@@ -74,6 +74,7 @@ In the ../REDInet/Package/Data folder is provided 2 BAM files to run REDInet bas
             
 ## **REDInet Options**:
 REDInet settings can be tuned to accomodate specific analysis needs.
+This is the list of available parameters that can be set: <br />
 
    --I                 Absolute path to the folder containing thefiles to be
                        analyzed.By default is the Data folder in this package.
