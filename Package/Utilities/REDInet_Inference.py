@@ -2,6 +2,7 @@ class inference():
 
     def __init__(self, cov_threshold, AGfreq_threshold, AG_min, Multiprocessing, Assembly, Max_missings,
                  Imputations, Processes, Utilities_path, Data_path, Results_path, Files_names):
+                     
         self.cov_threshold = cov_threshold
         self.AGfreq_threshold = AGfreq_threshold
         self.AG_min =  AG_min
