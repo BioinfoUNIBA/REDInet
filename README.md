@@ -4,7 +4,7 @@ A Temporal Convolutional Network based Python package, inspired by Google DeepMi
 ## **Virtual Environment Preparation and Software Installation**:
 REDInet runs on Tabix indexed REDItools output tables. <br />
 Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environment. <br />
-To create a the required enviroment:
+To create the required enviroment:
 1) Install Anaconda or Miniconda following the instructions at: <br />
   Anaconda <br />
             
