@@ -75,7 +75,7 @@ class inference():
 
         report += "\tTotal evaluated rows in {}: {}\n".format(name, number_of_lines)
 
-        columns = ["Region", "Position", "Ref", "Strand", "Cov", "Qual", "Bases", "AllSubs", "Freq"]
+        columns = ["Region", "Position", "Reference_Base", "Strand", "Base Coverage", "Base_Quality", "Bases_Count_[A,C,G,T]", "Substitution", "Substitution Frequency"]
 
         data_discarded =  pd.DataFrame(data_discarded)
         if data_discarded.shape[0] > 0:
@@ -198,8 +198,8 @@ class inference():
 
             del df
 
-            columns = ["Region", "Position", "Reference_Base", "Strand", "AG_Sub_Frequency", "Bases_Counts",
-                       "Start", "Stop", "N. Missing Nucleotides", "Missing Nucleotides Positions"]
+            columns = ["Region", "Position", "Reference_Base", "Strand", "AG_Substitution_Frequency", "Bases_Count_[A,C,G,T]",
+                       "Sequence_Start", "Sequence_Stop", "N.Missing_Nucleotides", "Missing_Nucleotides_Positions"]
 
             incompleates = pd.DataFrame(incompleates)
 
