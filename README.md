@@ -136,7 +136,7 @@ This is the list of available parameters that can be set: <br />
 ## **Notes**:
 REDInet is also compatible with older versions of REDItools.  <br />
 REDInet pipeline is optimizes to run on REDItools protocol-derived BAM files. <br />
-SO it's recommended to produce the BAM files via the REDItools protocol at:  <br />
+So it's recommended to produce the BAM files via the REDItools protocol at:  <br />
 
      https://www.nature.com/articles/s41596-019-0279-7
 
