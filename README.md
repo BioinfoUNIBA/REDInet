@@ -134,8 +134,9 @@ This is the list of available parameters that can be set: <br />
                        smaller than 30. By default the value is 10.
 
 ## **Notes**:
-REDInet is compatible with all the older versions of REDItools.  <br />
-It's suggested to produce the BAM files via the REDItools protocol at:  <br />
+REDInet is also compatible with older versions of REDItools.  <br />
+REDInet pipeline is optimizes to run on REDItools protocol-derived BAM files. <br />
+It's recommended to produce the BAM files via the REDItools protocol at:  <br />
 
      https://www.nature.com/articles/s41596-019-0279-7
 
