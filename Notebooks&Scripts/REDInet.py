@@ -211,7 +211,7 @@ class TCN():
         res_unit = Model(inputs=Input,  outputs=[res_connection, norm], name=f"Residual_Unit_{res_number}")
         return res_unit
 
-    def conv_block(self):
+    def maxpool_block(self):
         block = Sequential(name="MaxPooling_Block")
         block.add(Conv1D(filters=self.out_channels*3, kernel_size=self.kernel_size, padding = "causal", strides=self.strides,
                          kernel_initializer = Orthogonal(gain=self.gain), name="MaxPooling_Block_First_Conv1D"))
@@ -262,7 +262,7 @@ class TCN():
         conv = Conv1D(filters = self.out_channels, kernel_size=self.kernel_size, padding = "same", activation="relu",
                       kernel_initializer = Orthogonal(gain=self.gain), name="Conv1D")(input)
         stack = self.residual_stack()(conv)
-        block = self.conv_block()(stack)
+        block = self.maxpool_block()(stack)
         mlp = self.MLP()(block)
         redinet = Model(inputs=input, outputs=mlp, name="REDInet")
         return redinet
