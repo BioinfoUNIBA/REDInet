@@ -86,7 +86,7 @@ At the end of each step a file is automatically produced and stored in the choic
 3) Genomic positions filtered in in the previous phase are futher filtered for missing nucleotides in 101 nucleotides regions centered in them.  <br />
    Information regarding genomig positions filtered out in this phase are stored in the file: <br /> <br />
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;../<results folder>/<.gz name>_incompleates.txt <br /> <br />
-3) Genomic positions filtered in in the previous phase are subjected to the classification by the pretrained Deep Neural Network.  <br />
+3) Genomic positions filtered in in the previous phase are subjected to the classification by the pretrained Deep Neural Network Model (REDInet.h5) .  <br />
    Information regarding the classified genomig positions are stored in the file: <br /> <br />
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;../<results folder>/<.gz name>_predictions.txt <br /> 
           
