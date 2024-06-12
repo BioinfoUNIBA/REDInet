@@ -29,7 +29,7 @@ To create the required enviroment:
 
        pip install numpy pandas pysam scikit-learn tqdm tensorflow[and-cuda]==2.14.0
 
-6) Dowload and install REDItools 3. Package and installation guide at: <br />
+6) Dowload and install REDItools3. Package and installation guide at: <br />
 
        https://github.com/BioinfoUNIBA/REDItools3
    
