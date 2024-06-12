@@ -247,7 +247,7 @@ class TCN():
         mlp.add(Dense(self.up_out_channels*self.out_channels_mul, activation='relu', kernel_initializer = Orthogonal(gain=self.gain), name="Multilayer_Perceptron_First_DenseLayer"))
         mlp.add(BatchNormalization(momentum=self.momentum, epsilon=self.epsilon, center=True, scale=True,
                                    beta_initializer="zeros",gamma_initializer="ones", name="Multilayer_Perceptron_First_BatchNorm"))
-        mlp.add(Dense(int((self.self.up_out_channels*self.out_channels_mul)/2), activation='relu', kernel_initializer = Orthogonal(gain=self.gain),
+        mlp.add(Dense(int((self.up_out_channels*self.out_channels_mul)/2), activation='relu', kernel_initializer = Orthogonal(gain=self.gain),
                       kernel_regularizer= L2(l2=self.l2), name="Multilayer_Perceptron_Second_DenseLayer"))
         mlp.add(BatchNormalization(momentum=self.momentum, epsilon=self.epsilon, center=True, scale=True,
                                    beta_initializer="zeros",gamma_initializer="ones", name="Multilayer_Perceptron_Second_BatchNorm"))
