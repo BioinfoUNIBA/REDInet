@@ -169,12 +169,13 @@ class Utils():
 
 class TCN():
 
-    def __init__(self, input_shape=(101, 8), out_channels=35, max_rate=32, 
-                 kernel_size=2, gain=1.0, l2=0.01, momentum=0.2, epsilon=2e-5, 
-                 strides=1, pool_size=2, n_units=10):
+    def __init__(self, input_shape=(101, 8), out_channels=35, up_out_channels=35, out_channels_mul = 3, max_rate=32, 
+                 kernel_size=2, gain=1.0, l2=0.01, momentum=0.2, epsilon=2e-5, strides=1, pool_size=2, n_units=10):
         
         self.input_shape = input_shape
         self.out_channels = out_channels
+        self.up_out_channels = up_out_channels
+        self.out_channels_mul = out_channels_mul
         self.max_rate = max_rate
         self.kernel_size = kernel_size
         self.gain = gain
@@ -202,7 +203,7 @@ class TCN():
         sigmoid = Activation("sigmoid", name=f"Residual_Unit_{res_number}_Sigmoid_ActivationLayer")(dilation_block)
         tanh = Activation("tanh", name=f"Residual_Unit_{res_number}_Tanh_ActivationLayer")(dilation_block)
         gated_activation = Multiply(name=f"Residual_Unit_{res_number}_Gated_Activation_Unit")([sigmoid, tanh])
-        conv = Conv1D(filters=self.out_channels , kernel_size=1, padding = "causal", strides=1,
+        conv = Conv1D(filters=self.up_out_channels , kernel_size=1, padding = "causal", strides=1,
                       kernel_initializer = Orthogonal(gain=self.gain), name=f"Residual_Unit_{res_number}_Conv1D_1X1")(gated_activation)
         norm = BatchNormalization(momentum=self.momentum, epsilon=self.epsilon, center=True, scale=True,
                                   beta_initializer="zeros",gamma_initializer="ones", name=f"Residual_Unit_{res_number}_BatchNorm")(conv)
@@ -213,10 +214,10 @@ class TCN():
 
     def maxpool_block(self):
         block = Sequential(name="MaxPooling_Block")
-        block.add(Conv1D(filters=self.out_channels*3, kernel_size=self.kernel_size, padding = "causal", strides=self.strides,
+        block.add(Conv1D(filters=self.up_out_channels*self.out_channels_mul, kernel_size=self.kernel_size, padding = "causal", strides=self.strides,
                          kernel_initializer = Orthogonal(gain=self.gain), name="MaxPooling_Block_First_Conv1D"))
         block.add(MaxPooling1D(pool_size=self.pool_size, name="MaxPooling_Block_First_MaxPool"))
-        block.add(Conv1D(filters=self.out_channels*3, kernel_size=self.kernel_size, padding = "causal", strides=self.strides,
+        block.add(Conv1D(filters=self.up_out_channels*self.out_channels_mul, kernel_size=self.kernel_size, padding = "causal", strides=self.strides,
                          kernel_initializer = Orthogonal(gain=self.gain), name="MaxPooling_Block_Second_Conv1D"))
         block.add(tf.keras.layers.MaxPooling1D(pool_size=self.pool_size, name="MaxPooling_Block_Second_MaxPool"))
         block.add(BatchNormalization(momentum=self.momentum, epsilon=self.epsilon, center=True, scale=True,
@@ -233,9 +234,9 @@ class TCN():
                 globals()[f"res{i}"], globals()[f"skip{i}"] = self.residual_unit(i)(globals()[f"res{i-1}"])
         add1 = Add(name="Skip_Connections_AddLayer")([globals()[f"skip{i}"] for i in range(1, self.n_units+1, 1)])
         relu = Activation("relu", name="Skip_Connections_ReLU_ActivationLayer")(add1)
-        conv_1x1_1 = Conv1D(filters=self.out_channels, kernel_size=1, padding = "causal", strides=1, activation = "relu",
+        conv_1x1_1 = Conv1D(filters=self.up_out_channels, kernel_size=1, padding = "causal", strides=1, activation = "relu",
                             kernel_initializer = Orthogonal(gain=self.gain), name="Skip_Connections_First_ConvID_1X1")(relu)
-        conv_1x1_2 = Conv1D(filters=self.out_channels, kernel_size=1, padding = "causal", strides=1, activation = "relu",
+        conv_1x1_2 = Conv1D(filters=self.up_out_channels, kernel_size=1, padding = "causal", strides=1, activation = "relu",
                             kernel_initializer = Orthogonal(gain=self.gain), name="Skip_Connections_Second_ConvID_1X1")(conv_1x1_1)
         add2 = Add(name="Residual_Units_Stack_AddLayer")([conv_1x1_2, globals()[f"res{self.n_units}"]])      
         stack = keras.Model(inputs=Input, outputs=add2, name="Residual_Units_Stack")
@@ -243,14 +244,14 @@ class TCN():
 
     def MLP(self):
         mlp = Sequential(name = "Multilayer_Perceptron") 
-        mlp.add(Dense(self.out_channels*3, activation='relu', kernel_initializer = Orthogonal(gain=self.gain), name="Multilayer_Perceptron_First_DenseLayer"))
+        mlp.add(Dense(self.up_out_channels*self.out_channels_mul, activation='relu', kernel_initializer = Orthogonal(gain=self.gain), name="Multilayer_Perceptron_First_DenseLayer"))
         mlp.add(BatchNormalization(momentum=self.momentum, epsilon=self.epsilon, center=True, scale=True,
                                    beta_initializer="zeros",gamma_initializer="ones", name="Multilayer_Perceptron_First_BatchNorm"))
-        mlp.add(Dense(int((self.out_channels*3)/2), activation='relu', kernel_initializer = Orthogonal(gain=self.gain),
+        mlp.add(Dense(int((self.self.up_out_channels*self.out_channels_mul)/2), activation='relu', kernel_initializer = Orthogonal(gain=self.gain),
                       kernel_regularizer= L2(l2=self.l2), name="Multilayer_Perceptron_Second_DenseLayer"))
         mlp.add(BatchNormalization(momentum=self.momentum, epsilon=self.epsilon, center=True, scale=True,
                                    beta_initializer="zeros",gamma_initializer="ones", name="Multilayer_Perceptron_Second_BatchNorm"))
-        mlp.add(Dense(int((self.out_channels*3)/4), activation='relu', kernel_initializer = Orthogonal(gain=self.gain),
+        mlp.add(Dense(int((self.up_out_channels*self.out_channels_mul)/4), activation='relu', kernel_initializer = Orthogonal(gain=self.gain),
                       kernel_regularizer= L2(l2=self.l2), name="Multilayer_Perceptron_Third_DenseLayer"))
         mlp.add(BatchNormalization(momentum=self.momentum, epsilon=self.epsilon, center=True, scale=True,
                                    beta_initializer="zeros",gamma_initializer="ones", name="Multilayer_Perceptron_Third_BatchNorm"))
