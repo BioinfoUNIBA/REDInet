@@ -18,9 +18,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import gzip, logging, pysam, shlex, subprocess, sys
+import argparse, glob, gzip, logging, multiprocessing, os, pysam, shlex, subprocess, sys, time
 import numpy as np
 import pandas as pd
+from datetime import datetime
 from multiprocessing import current_process, freeze_support, get_context, Pool, RLock
 from sklearn.preprocessing import OneHotEncoder
 from tqdm import tqdm
@@ -341,9 +342,6 @@ class inference():
 
         print(f"Final Report:\n{final_report[:-2]}", flush=True)
 
-import argparse
-import glob, multiprocessing, os, time
-from datetime import datetime
 
 s = ("A-to-I RNA editing identification in RNAseq data from REDItools tabix-indexed files.\n"
      "\tOptions.\n"
