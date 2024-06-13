@@ -18,6 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import gzip, logging, pysam, shlex, subprocess, sys
+import numpy as np
+import pandas as pd
+from multiprocessing import current_process, freeze_support, get_context, Pool, RLock
+from sklearn.preprocessing import OneHotEncoder
+from tqdm import tqdm
+
 class inference():
 
     def __init__(self, cov_threshold, AGfreq_threshold, AG_min, Multiprocessing, Assembly, Max_missings,
@@ -469,21 +476,16 @@ else:
 execution_start = datetime.now()
 print(f"[{execution_start}] Execution start.", flush=True)
 
-import gzip, logging, pysam, shlex, subprocess, sys
-import numpy as np
-import pandas as pd
-
 logging.getLogger('tensorflow').setLevel(logging.ERROR)
 os.environ["KMP_AFFINITY"] = "noverbose"
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 import tensorflow as tf
+
 tf.autograph.set_verbosity(3)
 
-from multiprocessing import current_process, freeze_support, get_context, Pool, RLock
-from sklearn.preprocessing import OneHotEncoder
 from tensorflow import keras
 from keras import backend as K
-from tqdm import tqdm
 from tqdm.keras import TqdmCallback
 
 K.clear_session()
