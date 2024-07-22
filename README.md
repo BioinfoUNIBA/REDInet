@@ -132,7 +132,7 @@ This is the list of available parameters that can be set: <br />
                        
     --S                Number of missing nucleotides to be imputed. Value must
                        be an integer number grater than zero and equal or
-                       smaller than 30. By default the value is 10.
+                       smaller than 100. By default the value is 10.
 
 ## **Notes**:
 REDInet pipeline is optimizes to run on REDItools protocol-derived BAM files. <br />
