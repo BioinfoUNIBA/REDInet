@@ -37,15 +37,15 @@ To create the required enviroment:
 7) Dowload and install REDItools. Package and installation guide at: <br />
    REDItools <br />
 
-       https://github.com/BioinfoUNIBA/REDItools
+           https://github.com/BioinfoUNIBA/REDItools
    
    REDItools2 <br />
 
-       https://github.com/BioinfoUNIBA/REDItools2
+           https://github.com/BioinfoUNIBA/REDItools2
    
    REDItools3 <br />
 
-       https://github.com/BioinfoUNIBA/REDItools3
+           https://github.com/BioinfoUNIBA/REDItools3
    
 9) Create a REDInet dedicated folder and REDInet package download: <br />
 
