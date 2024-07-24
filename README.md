@@ -34,18 +34,27 @@ To create the required enviroment:
        pip install tqdm==4.66.2
        pip install tensorflow[and-cuda]==2.14.0
 
-7) Dowload and install REDItools3. Package and installation guide at: <br />
+7) Dowload and install REDItools. Package and installation guide at: <br />
+   REDItools <br />
+
+       https://github.com/BioinfoUNIBA/REDItools
+   
+   REDItools2 <br />
+
+       https://github.com/BioinfoUNIBA/REDItools2
+   
+   REDItools3 <br />
 
        https://github.com/BioinfoUNIBA/REDItools3
    
-8) Create a REDInet dedicated folder and REDInet package download: <br />
+9) Create a REDInet dedicated folder and REDInet package download: <br />
 
        mkdir REDInet
        cd REDInet
        wget https://github.com/BioinfoUNIBA/REDInet/tree/main/Package
        cd Package
    
-9) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
+10) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
 
        cd Utilities
        wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh38.primary_assembly.genome.fa.gz
@@ -55,7 +64,7 @@ To create the required enviroment:
        bgzib -d GRCh37.primary_assembly.genome.fa.gz
        samtools faidx GRCh37.primary_assembly.genome.fa
    
-10) Make REDInet_inference.py executable:
+11) Make REDInet_inference.py executable:
 
         chmod u+x REDInet_Inference.py
         cd ..
