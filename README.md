@@ -73,7 +73,7 @@ To create the required enviroment:
 REDInet classifies A to G substitutions, in RNAseq data, as derived from A-to-I RNA editing or not. <br />
 The REDInet pipeline requires BAM files to be prepared via REDItoolDnaRNA.py script from the REDItools3 package. <br />
 In the ../REDInet/Package/Data folder are provided 2 BAM files, as example to run REDInet pipeline as follows:  <br />
-1) Launch the REDItoolDnaRNA.py onto the example BAM file with the following setting: <br />
+1) Launch REDItools REDItoolDnaRNA.py script onto the example BAM file with the following setting: <br />
 
        python ../REDItools/main/REDItoolDnaRna.py -o ../REDInet/Package/Data -i ../REDInet/Package/Data/SRR12492027.SRR12492028.Aligned.sortedByCoord.out.chr10.bam -f ../REDInet/Package/Utilities/GRCh37.primary_assembly.genome.fa -t 40 -c 0,1 -m 0,255 -v 1 -q 0,30 -e -n 0.0 -N 0.0 -u -l -p -s 2 -g 2 -S
    
