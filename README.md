@@ -121,7 +121,8 @@ At the end of each step a file is automatically produced and stored in the choic
    If there aren't sequences with missing nucleotides than the <.gz name>_incompleates.txt file is empty. <br /> <br />
 3) Genomic positions filtered in in the previous phase are subjected to the classification by the pretrained Deep Neural Network model (REDInet.h5 file).  <br />
    Information regarding the classified genomig positions are stored in the file: <br /> <br />
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;../<results folder>/<.gz name>_predictions.txt <br /> 
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;../<results folder>/<.gz name>_predictions.txt <br /> <br />
+   If no sequence has been produced, due to the previous filtering steps,  than the <.gz name>_predictions.txt file is empty. <br /> 
           
 ## **REDInet Options**:
 REDInet settings can be tuned to accomodate specific analysis needs.  <br />
