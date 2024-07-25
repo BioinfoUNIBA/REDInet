@@ -47,26 +47,33 @@ To create the required enviroment:
 
            https://github.com/BioinfoUNIBA/REDItools3
    
-9) Create a REDInet dedicated folder and REDInet package download: <br />
+8) Create a REDInet dedicated folder and REDInet package download: <br />
 
        mkdir REDInet
        cd REDInet
        wget https://github.com/BioinfoUNIBA/REDInet/tree/main/Package
        cd Package
    
-10) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
+9) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
 
        cd Utilities
+   
        wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh38.primary_assembly.genome.fa.gz
+   
        bgzib -d GRCh38.primary_assembly.genome.fa.gz
+   
        samtools faidx GRCh38.primary_assembly.genome.fa
+   
        wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz
+   
        bgzib -d GRCh37.primary_assembly.genome.fa.gz
+   
        samtools faidx GRCh37.primary_assembly.genome.fa
    
-11) Make REDInet_inference.py executable:
+10) Make REDInet_inference.py executable:
 
         chmod u+x REDInet_Inference.py
+    
         cd ..
 
 ## **REDInet Usage**:
@@ -83,12 +90,16 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
 
 3) Compress and Tabix indexing the REDItools output tables: <br /> 
 
-       cd ../REDInet/Package/Data/DnaRna_<REDItools SRR12492045.SRR12492046 numeric ID>      
-       bgzip outTable_<REDItools SRR12492045.SRR12492046 numeric ID> 
+       cd ../REDInet/Package/Data/DnaRna_<REDItools SRR12492045.SRR12492046 numeric ID>
+    
+       bgzip outTable_<REDItools SRR12492045.SRR12492046 numeric ID>
+    
        tabix -s 1 -b 2 -e 2 -c R outTable_<REDItools SRR12492045.SRR12492046 numeric ID>.gz
        
-       cd ../REDInet/Package/Data/DnaRna_<REDItools SRR12492045.SRR12492046 numeric ID> 
-       bgzip outTable_<REDItools SRR12492045.SRR12492046 numeric ID> 
+       cd ../REDInet/Package/Data/DnaRna_<REDItools SRR12492045.SRR12492046 numeric ID>
+   
+       bgzip outTable_<REDItools SRR12492045.SRR12492046 numeric ID>
+   
        tabix -s 1 -b 2 -e 2 -c R outTable_<REDItools SRR12492045.SRR12492046 numeric ID>.gz
 
 5) Launch REDInet analysis on the REDItools output table: <br />
