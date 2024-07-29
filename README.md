@@ -156,7 +156,7 @@ This is the list of available parameters that can be set: <br />
     --P                Choose whether to work with multiprocessing or
                        not. Possible choices are: yes or no. By default is no.
                        
-    --G                Choose to accept sequences with maximum 30 missing
+    --G                Choose to accept sequences with maximum 100 missing
                        nucleotides. Possible choices are: yes or no. By default
                        is no.
                        
@@ -166,7 +166,8 @@ This is the list of available parameters that can be set: <br />
                        
     --S                Number of missing nucleotides to be imputed. Value must
                        be an integer number grater than zero and equal or
-                       smaller than 100. By default the value is 10.
+                       smaller than 100. It is suggested not to use numbers higher than 30.
+                       By default the value is 10.
 
     --R                Correct nucleotides strands in each extracted sequence, 
                        to match corresponding identified site srand. If it's set to no,
