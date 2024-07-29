@@ -23,9 +23,9 @@ import glob, multiprocessing, os, time
 from datetime import datetime
 
 class inference():
-    
+
     def __init__(self, cov_threshold, AGfreq_threshold, AG_min, Multiprocessing, Assembly, Max_missings,
-                 Imputations, Processes, Utilities_path, Data_path, Results_path, Files_names):
+                 Imputations, Processes, Utilities_path, Data_path, Results_path, Files_names, Recovery, Strandness):
         self.cov_threshold = cov_threshold
         self.AGfreq_threshold = AGfreq_threshold
         self.AG_min =  AG_min
@@ -38,7 +38,9 @@ class inference():
         self.Data_path = Data_path
         self.Results_path = Results_path
         self.Files_names = Files_names
-        
+        self.Recovery = Recovery
+        self.Strandness = Strandness
+
     def from_2_to_3_dimensions(self, pandas_df):
 
         time_step = pandas_df.shape[1]
@@ -53,9 +55,9 @@ class inference():
         np_array[:, :, 4:] = (np_array[:, :, 4:] - log_range[0]) / (log_range[1] - log_range[0])
 
         return np_array
-      
-    def extraction(self, name):    
-        
+
+    def extraction(self, name):
+
         report = ""
         if self.Multiprocessing == "yes":
             worker_id = current_process()._identity[0]-1
@@ -63,7 +65,7 @@ class inference():
             worker_id = 0
         intervals = []
         features_matrices = pd.DataFrame()
-        
+
         starttime = datetime.now()
         data = []
         data_discarded = []
@@ -71,52 +73,45 @@ class inference():
         report += "\t[{}] {} processing start.\n".format(datetime.now(), name)
 
         p = subprocess.Popen(["zgrep", "-c", "$", prefix+".gz"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        result, err = p.communicate()     
+        result, err = p.communicate()
         number_of_lines = int(str(result.strip().split()[0]).replace("'", " ")[2:])
         del p, result, err
-        
+
         with gzip.open(prefix+".gz") as redi:
             with tqdm(total=number_of_lines, position=worker_id+1, desc=f"{name} sites identification", leave=True) as pbar:
                 for c,l in enumerate(redi):
                     line = l.decode("utf-8").rstrip().split("\t")
-                    if line[0].find("chr") != -1:
+                    if line[2] == "A":
                         if line[4] != "-":
-                            if line[2] == "A":
-                                if line[7] == "AG": 
-                                    if int(line[4]) >= self.cov_threshold:
-                                        AG_rna = eval(line[6])[2]/sum(eval(line[6]))
-                                        if AG_rna >= self.AGfreq_threshold:
-                                            if eval(line[6])[2] >= self.AG_min:
-                                                data.append(line)
+                            if int(line[4]) >= self.cov_threshold:
+                                if "AG" in line[7]:
+                                    AG_rna = eval(line[6])[2]/sum(eval(line[6]))
+                                    if AG_rna >= self.AGfreq_threshold:
+                                        if eval(line[6])[2] >= self.AG_min:
+                                            if self.Strandness == "yes":
+                                                if int(line[3]) != 2:
+                                                    data.append(line)
+                                                else:
+                                                    data_discarded.append(line)
                                             else:
-                                                data_discarded.append(line)
+                                                data.append(line)
                                         else:
                                             data_discarded.append(line)
                                     else:
                                         data_discarded.append(line)
-                            if line[2] == "T":
-                                if line[7] == "TC": 
-                                    if int(line[4]) >= self.cov_threshold:
-                                        TC_rna = eval(line[6])[1]/sum(eval(line[6]))
-                                        if TC_rna >= self.AGfreq_threshold:
-                                            if eval(line[6])[1] >= self.AG_min:
-                                                data.append(line)
-                                            else:
-                                                data_discarded.append(line)
-                                        else:
-                                            data_discarded.append(line)
-                                    else:
-                                        data_discarded.append(line)
-
+                            else:
+                                if "AG" in line[7]:
+                                    data_discarded.append(line)
                     pbar.update(1)
-                                    
+
         report += "\tTotal evaluated rows in {}: {}\n".format(name, number_of_lines)
-        
-        columns = ["Region", "Position", "Ref", "Strand", "Cov", "Qual", "Bases", "AllSubs", "Freq"]
+
+        columns = ["Region", "Position", "Reference_Base", "Strand", "Coverage", "Quality", "Bases_Count", "Substitutions", "Substitutions_Frequency"]
+
 
         data_discarded =  pd.DataFrame(data_discarded)
         if data_discarded.shape[0] > 0:
-            
+
             data_discarded = data_discarded.iloc[:, 0:9]
             data_discarded.columns = columns
             df_dis = data_discarded.query("Region != 'chrM'")
@@ -125,16 +120,17 @@ class inference():
             df_dis.to_csv(os.path.join(self.Results_path, f"{name}_discarded.txt"), sep="\t", index=None)
             del df_dis
         else:
-            data_discarded.to_csv(os.path.join(self.Results_path, f"{name}_discarded.txt"), sep="\t", index=None) 
+            data_discarded.to_csv(os.path.join(self.Results_path, f"{name}_discarded.txt"), sep="\t", index=None)
 
         data = pd.DataFrame(data)
+        data = data.iloc[:, 0:9]
+        data.columns = columns
+        
         report += "\tTotal candidates sites in {}: {}.\n".format(name, data.shape[0])
         report += "\tCandidates sites identification in {} end. Elapsed time: {}.\n".format(name, datetime.now()-starttime)
-        
+
         if data.shape[0] > 0:
-            
-            data = data.iloc[:, 0:9]
-            data.columns = columns
+
             starttime_preds = datetime.now()
             ohe = OneHotEncoder()
             ohe.fit(np.array(["A", "C", "G", "T"]).reshape(-1, 1))
@@ -144,43 +140,38 @@ class inference():
             del data
             start_time = datetime.now()
             srr = pysam.TabixFile(prefix+".gz")
-            
+
             if self.Assembly == "GRCh37":
                 genome = pysam.FastaFile(os.path.join(self.Utilities_path, "GRCh37.primary_assembly.genome.fa"))
             else:
                 genome = pysam.FastaFile(os.path.join(self.Utilities_path, "GRCh38.primary_assembly.genome.fa"))
                 
-            with tqdm(total=df.shape[0], position=worker_id+1, desc=f"{name} features extraction", leave=True) as pbar:
                 
+                
+            with tqdm(total=df.shape[0], position=worker_id+1, desc=f"{name} features extraction", leave=True) as pbar:
                 for site in df.itertuples():
                     start = int(site.Position) - int((101-1)/2)
                     stop = int(site.Position) + int((101-1)/2)
-                    ref = site.Ref 
-                    strand = int(site.Strand)
-                    if ref == "A":
-                    	AGrna = eval(site.Bases)[2]/sum(eval(site.Bases))   
-                    else:
-                        AGrna = eval(site.Bases)[1]/sum(eval(site.Bases))
-                    
+                    AGrna = eval(site.Bases_Count)[2]/sum(eval(site.Bases_Count))
                     srr_interval = []
+
                     for s in srr.fetch(site.Region, start-1, stop):
                         info = s.split("\t")
                         srr_interval.append([info[0], info[1], info[2], info[3], info[6]])
                     srr_interval = pd.DataFrame(srr_interval, columns=[f"{i}" for i in range(5)])
                     srr_interval.iloc[:, 1] = srr_interval.iloc[:, 1].astype("int32")
-                    srr_interval.iloc[:, 3] = srr_interval.iloc[:, 3].astype("int32")
 
                     n_missings = 101-int(srr_interval.shape[0])
                     missings = [i  for i in range(start, stop+1, 1) if i not in srr_interval.iloc[:, 1].tolist()]
-                    
+
                     temp = []
                     if self.Imputations == "yes" and n_missings > 0 and n_missings <=self.Max_missings :
-              
+
                         freqs_impud = {"A":"[1,0,0,0]", "C":"[0,1,0,0]", "G":"[0,0,1,0]", "T":"[0,0,0,1]"}
                         complement = {"A":"T", "C":"G", "G":"C", "T":"A"}
-                        
+
                         if strand != 0:
-                            
+
                             for position in missings:
                                 base = genome.fetch(site.Region, int(position)-1, int(position))
                                 value = freqs_impud.get(base)
@@ -188,7 +179,7 @@ class inference():
                                     temp.append([site.Region, position, base, strand, value])
                                 else:
                                     pass
-                                
+
                         else:
 
                             for position in missings:
@@ -197,12 +188,11 @@ class inference():
                                 if complement_base:
                                     value = freqs_impud.get(complement_base)
                                     if value:
-                                        temp.append([site.Region, position, complement_base, strand, value])           
+                                        temp.append([site.Region, position, complement_base, strand, value])
                                     else:
                                         pass
                                 else:
-                                    pass       
-                             
+                                    pass
 
                     if len(temp) > 0 :
 
@@ -211,15 +201,12 @@ class inference():
                         srr_interval.sort_values(by=["1"], inplace=True, ignore_index=True)
                         srr_interval.reset_index(drop=True, inplace=True)
 
-                    if srr_interval.shape[0] == 101:
-
-                        intervals.append([site.Region, site.Position, site.Ref, site.Strand, 
-                                          AGrna, site.Bases, start, stop, n_missings, f"{missings}".replace(" ", "")])
+                    if (srr_interval.shape[0] == 101 and len(set(srr_interval["3"])) == 1) or (srr_interval.shape[0] == 101 and self.Recovery == "yes"):
+                        
                         total_extracted += 1
+                        strand = site.Strand
                         seq = srr_interval["2"].values.reshape(-1,1)
                         seq_ohe = ohe.transform(seq).toarray().T
-                        
-                        strands = srr_interval["3"].tolist()
                         vects_freqs = []
                         vects = []
                         for vect in srr_interval["4"]:
@@ -232,39 +219,47 @@ class inference():
                         vects = np.array(vects).T
                         encoded_site = pd.concat([pd.DataFrame(seq_ohe), pd.DataFrame(vects_freqs)])
                         encoded_site.reset_index(drop=True, inplace=True)
-
-                        if ref == "A":
-                            for i in range(101):                                 
-                                if strands[i] != strand:
-                                        encoded_base = encoded_site.iloc[:, i].tolist()
-                                        encoded_site.iloc[:, i] = [encoded_base[3], encoded_base[2], encoded_base[1], encoded_base[0], 
-                                                                   encoded_base[7], encoded_base[6], encoded_base[5], encoded_base[4]]
-                            if strand == 0:
-                                encoded_site = pd.DataFrame(np.flip(encoded_site.values, axis=1))
-                        else:
-                            for i in range(101):                                 
-                                if strands[i] == strand:
-                                    encoded_base = encoded_site.iloc[:, i].tolist()
-                                    encoded_site.iloc[:, i] = [encoded_base[3], encoded_base[2], encoded_base[1], encoded_base[0], 
-                                                               encoded_base[7], encoded_base[6], encoded_base[5], encoded_base[4]]
-                            if strand != 0:
-                                encoded_site = pd.DataFrame(np.flip(encoded_site.values, axis=1))
                         
-                        features_matrices = pd.concat([features_matrices, encoded_site], axis=0)
-
+                        unstranded = 0
+                        if self.Recovery == "yes" and len(set(srr_interval["3"])) != 1:
+                            strands = srr_interval.loc[:, "3"].tolist()
+                            for i in range(101):
+                                if strands[i] == 2:
+                                    unstranded += 1
+                            for i in range(101):
+                                if strands[i] != strand:
+                                    encoded_base = encoded_site.iloc[:, i].tolist()
+                                    encoded_site.iloc[:, i] = [encoded_base[3], encoded_base[2], encoded_base[1], encoded_base[0],
+                                                               encoded_base[7], encoded_base[6], encoded_base[5], encoded_base[4]]
+                        if strand == 0: 
+                            encoded_site = pd.DataFrame(np.flip(encoded_site.values, axis=1))
+                            
+                        if unstranded == 0:
+                            intervals.append([site.Region, site.Position, site.Reference_Base, site.Strand, site.Coverage, site.Quality,
+                                              AGrna, site.Bases_Count, start, stop, 0, "[]"])
+                            features_matrices = pd.concat([features_matrices, encoded_site], axis=0)
+                        else:
+                            incompleates.append([site.Region, site.Position, site.Reference_Base, site.Strand, site.Coverage, site.Quality,
+                                                  AGrna, site.Bases_Count, start, stop, "0 *", "[]"])
                     else:
-                        incompleates.append([site.Region, site.Position, site.Ref, site.Strand, 
-                                              AGrna, site.Bases, start, stop, n_missings, f"{missings}".replace(" ", "")])
+                        if srr_interval.shape[0] != 101:
+                            incompleates.append([site.Region, site.Position, site.Reference_Base, site.Strand, site.Coverage, site.Quality,
+                                                  AGrna, site.Bases_Count, start, stop, n_missings, f"{missings}".replace(" ", "")])
+                        else: 
+                            incompleates.append([site.Region, site.Position, site.Reference_Base, site.Strand, site.Coverage, site.Quality,
+                                                  AGrna, site.Bases_Count, start, stop, "0 **", "[]"])   
+                               
                     pbar.update(1)
-                    
-            del df       
-                
-            columns = ["Region", "Position", "Reference_Base", "Strand", "AG/TC_Sub_Frequency", "Bases_Counts", 
-                       "Start", "Stop", "N. Missing Nucleotides", "Missing Nucleotides Positions"]
-                
-            incompleates = pd.DataFrame(incompleates)    
-            
-            if incompleates.shape[0] > 0:    
+
+
+            del df
+
+            columns = ["Region", "Position", "Reference_Base", "Strand", "Coverage", "Quality", "AG_Sub_Frequency", "Bases_Count",
+                       "Start", "Stop", "Missing_Nucleotides_Count", "Missing_Nucleotides_Positions"]
+
+            incompleates = pd.DataFrame(incompleates)
+
+            if incompleates.shape[0] > 0:
                 incompleates.columns = columns
                 report += "\tTotal sequence with eccessive missing nucleotides in {}: {}.\n".format(name, incompleates.shape[0])
                 incompleates.to_csv(os.path.join(self.Results_path, f"{name}_incompleates.txt"), sep="\t", index=None)
@@ -273,44 +268,44 @@ class inference():
                 report += "\tNo sequences with gap for candidates sites in {}.".format(name)
                 incompleates.to_csv(os.path.join(self.Results_path, f"{name}_incompleates.txt"), sep="\t", index=None)
 
-                
+
             intervals = pd.DataFrame(intervals)
             if intervals.shape[0]>0:
                 intervals.columns = columns
 
             report += "\tTotal extracted sites in {}: {}.\n".format(name, total_extracted)
-            report += "\tFeatures extraction in {} end. Elapsed time {}.\n".format(name, datetime.now()-starttime_preds) 
-        
+            report += "\tFeatures extraction in {} end. Elapsed time {}.\n".format(name, datetime.now()-starttime_preds)
+
         else:
             del data
             intervals = pd.DataFrame()
             features_matrices = pd.DataFrame()
-            
+
         return intervals, features_matrices, name, report
-                      
+
     def make_predictions(self)->None:
-        
+
         model = tf.keras.models.load_model(os.path.join(self.Utilities_path, "REDInet.h5"))
-        
+
         final_report = ""
-        
+
         if self.Multiprocessing == "yes":
 
             Inputs = []
-            
+
             for Name in self.Files_names:
                 Inputs.append(Name.replace(".gz", ""))
-                
+
             freeze_support()
 
             ctx = get_context('spawn')
-            lock = ctx.RLock()           
+            lock = ctx.RLock()
 
             tqdm.set_lock(lock)
-                
+
             with Pool(self.Processes, initializer=tqdm.set_lock, initargs=(lock,)) as pool:
                 for metadata, features, Name, process_report in pool.map(self.extraction, Inputs):
-                    
+
                     if metadata.shape[0]>0:
 
                         starttime_preds = datetime.now()
@@ -319,31 +314,31 @@ class inference():
                         features = self.log_preprocessing(features)
                         y_hat_proba = model.predict(features, batch_size=512, verbose=0, callbacks=[TqdmCallback(verbose=2,  desc=f"{Name} sites prediction")])
                         
-                        metadata["Not_Editing_Probability"] = 1.0 - y_hat_proba
-                        metadata["Editing_Probability"] = y_hat_proba
+                        metadata.loc[:, "Not_Editing_Probability"] = 1.0 - y_hat_proba
+                        metadata.loc[:, "Editing_Probability"] = y_hat_proba
                         predictions = []
                         for x in  y_hat_proba:
                             if x > 0.5:
                                 predictions.append("Editing")
                             else:
                                 predictions.append("Not_Editing")
-                        metadata["Predicted_Class"] = predictions 
-                        
-                        metadata.to_csv(os.path.join(self.Results_path, f"{Name}_predictions.txt"), sep="\t", index=None)
+                        metadata.loc[:, "Predicted_Class"] = predictions
+
                         final_report += "\tInference on {} end. Elapsed time {}.\n".format( Name, datetime.now()-starttime_preds)
                     else:
                         final_report += "\tNo Inference on {} could be carried out.\n".format( Name)
-                    
+
                     final_report += process_report
-                    
+                    metadata.to_csv(os.path.join(self.Results_path, f"{Name}_predictions.txt"), sep="\t", index=None)
+
         else:
-            
+
             Names = self.Files_names
-            
+
             for Name in Names:
-                
+
                 metadata, features, Name, process_report = self.extraction(Name.replace(".gz", ""))
-                
+
                 if metadata.shape[0]>0:
 
                     starttime_preds = datetime.now()
@@ -351,28 +346,28 @@ class inference():
                     features = self.from_2_to_3_dimensions(features)
                     features = self.log_preprocessing(features)
                     y_hat_proba = model.predict(features, batch_size=512, verbose=0, callbacks=[TqdmCallback(verbose=2,  desc=f"{Name} sites prediction")])
-    
-                    metadata["Not_Editing_Probability"] = 1.0 - y_hat_proba
-                    metadata["Editing_Probability"] = y_hat_proba
-    
+
+                    metadata.loc[:, "Not_Editing_Probability"] = 1.0 - y_hat_proba
+                    metadata.loc[:, "Editing_Probability"] = y_hat_proba
+
                     predictions = []
                     for x in  y_hat_proba:
                         if x > 0.5:
                             predictions.append("Editing")
                         else:
                             predictions.append("Not_Editing")
-                    metadata["Predicted_Class"] = predictions
+                    metadata.loc[:, "Predicted_Class"] = predictions
 
-                    metadata.to_csv(os.path.join(self.Results_path, f"{Name}_predictions.txt"), sep="\t", index=None)
                     final_report += "\tInference on {} end. Elapsed time {}.\n".format(Name, datetime.now()-starttime_preds)
                 else:
                     final_report += "\tNo Inference on {} could be carried out.\n".format(Name)
-                
+
                 final_report += process_report
-                
+                metadata.to_csv(os.path.join(self.Results_path, f"{Name}_predictions.txt"), sep="\t", index=None)
+
         print(f"Final Report:\n{final_report[:-2]}", flush=True)
-        
-        
+
+
 s = ("A-to-I RNA editing identification in RNAseq data from REDItools tabix-indexed files.\n"
      "\tOptions.\n"
      "\t--I: Input files folder path.\n"
@@ -384,7 +379,9 @@ s = ("A-to-I RNA editing identification in RNAseq data from REDItools tabix-inde
      "\t--P: Use of multiprocessing.\n"
      "\t--G: Accept sequences'gaps.\n"
      "\t--A: Human genome assembly to adopt.\n"
-     "\t--S: Maximum number of gaps tollerated.\n")
+     "\t--S: Maximum number of gaps tollerated.\n"
+     "\t--R: Correct sequences nucletides strands.\n"
+     "\t--U: Indicate if the samples derived from Unstranded RNAseq.\n")
 
 parser = argparse.ArgumentParser(description=s)
 parser.add_argument("--I", type=str, default="default", help=("Absolute path to the folder containing the files to be analyzed."
@@ -404,19 +401,25 @@ parser.add_argument("--N", type=str, default="default", help=("Compleate list of
                                                               "List must be included in box brackets and names must be separated by commas without spaces."
                                                               "Es:[data1.gz,data2.gz,data3.gz]."
                                                               "By default the tool analyze all the .gz files in the input directory."))
-parser.add_argument("--P", type=str, default="no", choices=["yes", "no"], help=("Choose whether to work with multiprocessing or not." 
+parser.add_argument("--P", type=str, default="no", choices=["yes", "no"], help=("Choose whether to work with multiprocessing or not."
                                                                                 "Possible choices are: yes or no."
                                                                                 "By default is no."))
-parser.add_argument("--G", type=str, default="no", choices=["yes", "no"], help=("Choose to accept sequences with maximum 100 missing nucleotides." 
+parser.add_argument("--G", type=str, default="no", choices=["yes", "no"], help=("Choose to accept sequences with maximum 100 missing nucleotides."
                                                                                 "Possible choices are: yes or no."
                                                                                 "By default is no."))
-parser.add_argument("--A", type=str, default="GRCh37", choices=["GRCh37", "GRCh38"], help=("Human genome assembly to use in handling missing nucleotides." 
+parser.add_argument("--A", type=str, default="GRCh37", choices=["GRCh37", "GRCh38"], help=("Human genome assembly to use in handling missing nucleotides."
                                                                                            "Possible choices are: GRCh37 or GRCh38."
                                                                                            "By default is GRCh37."))
-parser.add_argument("--S", type=int, default=10, help=("Number of missing nucleotides to be imputed" 
+parser.add_argument("--S", type=int, default=10, help=("Number of missing nucleotides to be imputed"
                                                        "Value must be an integer number grater than zero and equal or smaller than 100."
                                                        "It is suggested not to use numbers higher than 30 to avoid excessively impacting performance."
                                                        "By default the value is 10."))
+parser.add_argument("--R", type=str, default="no", choices=["yes", "no"], help=("Correct nucleotides strands in extracted sequences"
+                                                                                "Possible choices are: yes or no."
+                                                                                "By default is no."))
+parser.add_argument("--U", type=str, default="no", choices=["yes", "no"], help=("Declare if the original samples cames from Unstranded RNAseq"
+                                                                                "Possible choices are: yes or no."
+                                                                                "By default is no."))
 
 args = parser.parse_args()
 
@@ -428,7 +431,7 @@ else:
     data_path = args.I
     if not os.path.isdir(data_path):
         sys.exit("Invalid --I value.")
-    
+
 if args.O == "default":
     results_path = utilities_path.replace("Utilities", "Results")
 else:
@@ -445,14 +448,14 @@ try:
         sys.exit("Invalid --C value")
 except:
     sys.exit("Invalid --C value")
-    
+
 frequence_threshold = args.F
 try:
     if frequence_threshold <= 0 and frequence_threshold >= 1.0:
         sys.exit("Invalid --F value.")
 except:
     sys.exit("Invalid --F value.")
-    
+
 adenines_min = args.M
 try:
     if adenines_min <= 0:
@@ -475,11 +478,19 @@ elif MultiProcessing == "no":
     processes = 1
 else:
     sys.exit("Invalid --P value.")
-    
+
 imputations = args.G
 if imputations != "yes" and imputations != "no":
     sys.exit("Invalid --G value.")
-    
+
+recovery = args.R
+if recovery != "yes" and recovery != "no":
+    sys.exit("Invalid --R value.")
+
+strandness = args.U
+if strandness != "yes" and strandness != "no":
+    sys.exit("Invalid --R value.")
+
 assembly = args.A
 if assembly != "GRCh37" and assembly != "GRCh38":
     sys.exit("Invalid --A value.")
@@ -524,7 +535,7 @@ from tqdm.keras import TqdmCallback
 
 K.clear_session()
 
-inference(coverage_threshold, frequence_threshold, adenines_min, MultiProcessing, assembly, max_missings, 
-          imputations, processes, utilities_path, data_path, results_path, files_names).make_predictions()
+inference(coverage_threshold, frequence_threshold, adenines_min, MultiProcessing, assembly, max_missings,
+          imputations, processes, utilities_path, data_path, results_path, files_names, recovery, strandness).make_predictions()
 
 print(f"[{datetime.now()}] Execution end. time elapsed: [{datetime.now()-execution_start}]", flush=True)
