@@ -195,6 +195,6 @@ In case of unstranded RNAseq-derived BAM files, it's required to infer the stran
 The GTF file has to be sorted and tabix-indexed before its usage. <br />
 This procedure can only be performed with REDItools (version 1). <br /> 
 It's suggested to use the REDItoolDnaRnav13.py in the NPscripts REDItools folder. <br />
-In this case REDInet_Inference.py should be used using the following --G no --U yes. <br />
+In this case REDInet_Inference.py should be used using the appropriate flag: --U yes. <br />
 REDInet is compatible with every versions of REDItools.  <br />
 
