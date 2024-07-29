@@ -168,6 +168,19 @@ This is the list of available parameters that can be set: <br />
                        be an integer number grater than zero and equal or
                        smaller than 100. By default the value is 10.
 
+    --R                Correct nucleotides strands in extracted sequences, 
+                       to match identified sites srand. If it's set to no,
+                       sequences with nucleotides mapping on different strands are discarded.
+                       Possible choices are: yes or no. 
+                       By default is no. 
+                       
+    --U                Declare if the original samples cames from Unstranded RNAseq.
+                       Possible choices are: yes or no.
+                       By default is no.
+                  
+
+                       
+
 ## **Notes**:
 REDInet pipeline is optimizes to run on REDItools protocol-derived BAM files. <br />
 So it's recommended to produce the BAM files via the REDItools protocol at:  <br />
