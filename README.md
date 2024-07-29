@@ -168,8 +168,8 @@ This is the list of available parameters that can be set: <br />
                        be an integer number grater than zero and equal or
                        smaller than 100. By default the value is 10.
 
-    --R                Correct nucleotides strands in extracted sequences, 
-                       to match identified sites srand. If it's set to no,
+    --R                Correct nucleotides strands in each extracted sequence, 
+                       to match corresponding identified site srand. If it's set to no,
                        sequences with nucleotides mapping on different strands are discarded.
                        Possible choices are: yes or no. 
                        By default is no. 
