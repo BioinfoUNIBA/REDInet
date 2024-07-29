@@ -414,7 +414,8 @@ parser.add_argument("--S", type=int, default=10, help=("Number of missing nucleo
                                                        "Value must be an integer number grater than zero and equal or smaller than 100."
                                                        "It is suggested not to use numbers higher than 30 to avoid excessively impacting performance."
                                                        "By default the value is 10."))
-parser.add_argument("--R", type=str, default="no", choices=["yes", "no"], help=("Correct nucleotides strands in extracted sequences"
+parser.add_argument("--R", type=str, default="no", choices=["yes", "no"], help=("Correct nucleotides strands in each extracted sequence, to match corresponding identified site srand."
+                                                                                "f it's set to no, sequences with nucleotides mapping on different strands are discarded."
                                                                                 "Possible choices are: yes or no."
                                                                                 "By default is no."))
 parser.add_argument("--U", type=str, default="no", choices=["yes", "no"], help=("Declare if the original samples cames from Unstranded RNAseq"
