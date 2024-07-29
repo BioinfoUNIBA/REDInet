@@ -115,7 +115,9 @@ At the end of each step a file is automatically produced and stored in the choic
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;../<results folder>/<.gz name>_discarded.txt <br /> <br />
    If no genomic position is filtered out than the <.gz name>_discarded.txt file is empty. <br /> <br />
 3) Genomic positions filtered in in the previous phase are futher filtered for missing nucleotides in 101 nucleotides regions centered in them.  <br />
-   Nucleotides with unassigned strand are cosidered as missing nucleotides. In this case the reported number of missing nucleotides is accompanied by the symbol "*". <br /> 
+   Extracted sequences having nucleotides with unassigned strands, are discarded and their missing nucleotides are described by the symbol "0 *". <br />
+   Extracted sequences having nucleotides with unmatching strands, are discarded and their missing nucleotides are described by the symbol "0 **". <br />
+   Extracted sequences having nucleotides with unmatching strands, can be retained and corrected using the appropriate REDInet_Inference.py flag. <br />
    Information regarding genomig positions filtered out in this phase are stored in the file: <br /> <br />
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;../<results folder>/<.gz name>_incompleates.txt <br /> <br />
    If there aren't sequences with missing nucleotides than the <.gz name>_incompleates.txt file is empty. <br /> <br />
