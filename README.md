@@ -60,13 +60,13 @@ To create the required enviroment:
    
        wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh38.primary_assembly.genome.fa.gz
    
-       bgzib -d GRCh38.primary_assembly.genome.fa.gz
+       gunzip GRCh38.primary_assembly.genome.fa.gz
    
        samtools faidx GRCh38.primary_assembly.genome.fa
    
        wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_46/GRCh37_mapping/GRCh37.primary_assembly.genome.fa.gz
    
-       bgzib -d GRCh37.primary_assembly.genome.fa.gz
+       gunzip GRCh37.primary_assembly.genome.fa.gz
    
        samtools faidx GRCh37.primary_assembly.genome.fa
    
