@@ -89,13 +89,10 @@ class inference():
                                         AG_rna = eval(line[6])[2]/sum(eval(line[6]))
                                         if AG_rna >= self.AGfreq_threshold:
                                             if eval(line[6])[2] >= self.AG_min:
-                                                if self.Strandness == "yes":
-                                                    if int(line[3]) != 2:
+                                                if int(line[3]) != 2:
                                                         data.append(line)
-                                                    else:
-                                                        data_discarded.append(line)
                                                 else:
-                                                    data.append(line)
+                                                    data_discarded.append(line)
                                             else:
                                                 data_discarded.append(line)
                                         else:
@@ -166,34 +163,38 @@ class inference():
                     missings = [i  for i in range(start, stop+1, 1) if i not in srr_interval.iloc[:, 1].tolist()]
 
                     temp = []
-                    if self.Imputations == "yes" and n_missings > 0 and n_missings <=self.Max_missings :
+                    if self.Imputations == "yes" and n_missings > 0 and n_missings <=self.Max_missings:
 
-                        freqs_impud = {"A":"[1,0,0,0]", "C":"[0,1,0,0]", "G":"[0,0,1,0]", "T":"[0,0,0,1]"}
-                        complement = {"A":"T", "C":"G", "G":"C", "T":"A"}
-
-                        if strand != 0:
-
-                            for position in missings:
-                                base = genome.fetch(site.Region, int(position)-1, int(position))
-                                value = freqs_impud.get(base)
-                                if value:
-                                    temp.append([site.Region, position, base, strand, value])
-                                else:
-                                    pass
-
+                        if self.Strandness == "yes":
+                            report += "\tWarning!!! Missing nucleotides cannot be imputed with unstranded RNAseq.\nThe execution will continue without imputations.\n"
+                            
                         else:
-
-                            for position in missings:
-                                base = genome.fetch(site.Region, int(position)-1, int(position))
-                                complement_base = complement.get(base)
-                                if complement_base:
-                                    value = freqs_impud.get(complement_base)
+                            freqs_impud = {"A":"[1,0,0,0]", "C":"[0,1,0,0]", "G":"[0,0,1,0]", "T":"[0,0,0,1]"}
+                            complement = {"A":"T", "C":"G", "G":"C", "T":"A"}
+    
+                            if strand != 0:
+    
+                                for position in missings:
+                                    base = genome.fetch(site.Region, int(position)-1, int(position))
+                                    value = freqs_impud.get(base)
                                     if value:
-                                        temp.append([site.Region, position, complement_base, strand, value])
+                                        temp.append([site.Region, position, base, strand, value])
                                     else:
                                         pass
-                                else:
-                                    pass
+    
+                            else:
+    
+                                for position in missings:
+                                    base = genome.fetch(site.Region, int(position)-1, int(position))
+                                    complement_base = complement.get(base)
+                                    if complement_base:
+                                        value = freqs_impud.get(complement_base)
+                                        if value:
+                                            temp.append([site.Region, position, complement_base, strand, value])
+                                        else:
+                                            pass
+                                    else:
+                                        pass
 
                     if len(temp) > 0 :
 
