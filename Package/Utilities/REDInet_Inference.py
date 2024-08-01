@@ -81,27 +81,28 @@ class inference():
             with tqdm(total=number_of_lines, position=worker_id+1, desc=f"{name} sites identification", leave=True) as pbar:
                 for c,l in enumerate(redi):
                     line = l.decode("utf-8").rstrip().split("\t")
-                    if line[2] == "A":
-                        if line[4] != "-":
-                            if int(line[4]) >= self.cov_threshold:
-                                if "AG" in line[7]:
-                                    AG_rna = eval(line[6])[2]/sum(eval(line[6]))
-                                    if AG_rna >= self.AGfreq_threshold:
-                                        if eval(line[6])[2] >= self.AG_min:
-                                            if self.Strandness == "yes":
-                                                if int(line[3]) != 2:
-                                                    data.append(line)
+                    if line[0].str.find("chr") != -1:
+                        if line[2] == "A":
+                            if line[4] != "-":
+                                if int(line[4]) >= self.cov_threshold:
+                                    if "AG" in line[7]:
+                                        AG_rna = eval(line[6])[2]/sum(eval(line[6]))
+                                        if AG_rna >= self.AGfreq_threshold:
+                                            if eval(line[6])[2] >= self.AG_min:
+                                                if self.Strandness == "yes":
+                                                    if int(line[3]) != 2:
+                                                        data.append(line)
+                                                    else:
+                                                        data_discarded.append(line)
                                                 else:
-                                                    data_discarded.append(line)
+                                                    data.append(line)
                                             else:
-                                                data.append(line)
+                                                data_discarded.append(line)
                                         else:
                                             data_discarded.append(line)
-                                    else:
+                                else:
+                                    if "AG" in line[7]:
                                         data_discarded.append(line)
-                            else:
-                                if "AG" in line[7]:
-                                    data_discarded.append(line)
                     pbar.update(1)
 
         report += "\tTotal evaluated rows in {}: {}\n".format(name, number_of_lines)
