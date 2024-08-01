@@ -81,7 +81,7 @@ class inference():
             with tqdm(total=number_of_lines, position=worker_id+1, desc=f"{name} sites identification", leave=True) as pbar:
                 for c,l in enumerate(redi):
                     line = l.decode("utf-8").rstrip().split("\t")
-                    if line[0].str.find("chr") != -1:
+                    if line[0].find("chr") != -1:
                         if line[2] == "A":
                             if line[4] != "-":
                                 if int(line[4]) >= self.cov_threshold:
