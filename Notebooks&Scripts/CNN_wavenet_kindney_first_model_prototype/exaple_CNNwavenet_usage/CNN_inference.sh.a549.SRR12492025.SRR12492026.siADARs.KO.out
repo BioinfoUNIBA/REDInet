@@ -1,0 +1,50 @@
+INPUT:
+Cell-line: a549
+Sample: SRR12492025.SRR12492026.siADARs
+Genotype: KO
+Assembly: GRCh37
+REDItools Output Folder: /lustre/bio_running/A_to_I_Pietro/model_test_2023/a549/SRR12492025.SRR12492026.siADARs/DnaRna_302610513
+Compressed REDItools OutTable name: outTable_302610513.gz
+Minumum Coverage: 50
+Compressed REDItools OutTable filepath: /lustre/bio_running/A_to_I_Pietro/model_test_2023/a549/SRR12492025.SRR12492026.siADARs/DnaRna_302610513/outTable_302610513.gz
+OUTPUT:
+Output filepath: /lustre/bio_running/new_basecaller/REDINET_TEST_30_07_2024/REDInet/Package/Results_CNN_inference/a549/SRR12492025.SRR12492026.siADARs.outTable_302610513.gz
+Launching CNN_inference.py with log-preprocessing:
+[2024-07-31 00:53:52.243520] CNN_inference.py:
+[2024-07-31 00:53:52.247859] Input arguments:
+	- reditable --> /lustre/bio_running/A_to_I_Pietro/model_test_2023/a549/SRR12492025.SRR12492026.siADARs/DnaRna_302610513/outTable_302610513.gz
+	- model --> /lustre/bio_running/A_to_I_Pietro/model_test_2023/src/kidney_dataset/cnn_wavenet_14112023/model_WaveNet_small_log_preprocessing14_11_2023_15_01_48.h5
+	- output_table_prefix --> /lustre/bio_running/new_basecaller/REDINET_TEST_30_07_2024/REDInet/Package/Results_CNN_inference/a549/SRR12492025.SRR12492026.siADARs.outTable_302610513.gz
+	- cov_threshold --> 50
+	- AGfreq_threshold --> 0.01
+	[2024-07-31 00:53:52.276470] Sites evaluated: 0
+	[2024-07-31 00:55:05.690449] Sites evaluated: 50000000
+	[2024-07-31 00:56:19.235955] Sites evaluated: 100000000
+	[2024-07-31 00:57:33.629075] Sites evaluated: 150000000
+	[2024-07-31 00:58:47.452986] Sites evaluated: 200000000
+[2024-07-31 00:59:50.160640] Total evaluated rows: 241233789
+[2024-07-31 00:59:50.349459] Total extracted Candidates Editing sites for current sample: 41227
+[2024-07-31 00:59:50.349590] Extraction of Editing Candidates finished for current sample. Elapsed time: 0:05:58.101590.
+
+           Region   Position Ref Strand  ... gQual g[A,C,G,T] gAllSubs gFreq
+0      GL000219.1      88331   A      0  ...     -          -        -     -
+1      GL000219.1      97358   A      0  ...     -          -        -     -
+2      GL000241.1      14862   A      0  ...     -          -        -     -
+3      GL000241.1      14984   A      0  ...     -          -        -     -
+4      GL000241.1      15192   A      0  ...     -          -        -     -
+...           ...        ...  ..    ...  ...   ...        ...      ...   ...
+41222        chr8  146157320   A      0  ...     -          -        -     -
+41223        chr8  146157441   A      0  ...     -          -        -     -
+41224        chr8  146157496   A      0  ...     -          -        -     -
+41225  GL000191.1      40300   A      0  ...     -          -        -     -
+41226  GL000191.1      40332   A      0  ...     -          -        -     -
+
+[41227 rows x 14 columns]
+[2024-07-31 00:59:50.797663] Starting extraction of intervals.
+[2024-07-31 00:59:50.834616] Loading reditable with tabix and pysam: /lustre/bio_running/A_to_I_Pietro/model_test_2023/a549/SRR12492025.SRR12492026.siADARs/DnaRna_302610513/outTable_302610513.gz
+[2024-07-31 01:02:34.032486] Total extracted Editing sites: 17393.
+[2024-07-31 01:02:34.032580] Features Extraction Finished. Elapsed time 0:02:43.234632.
+[2024-07-31 01:02:34.034074] Loading features extracted of editing candidates from: /lustre/bio_running/new_basecaller/REDINET_TEST_30_07_2024/REDInet/Package/Results_CNN_inference/a549/SRR12492025.SRR12492026.siADARs.outTable_302610513.gz.feature_vectors.tsv
+[2024-07-31 01:02:36.284849] Loading model from: /lustre/bio_running/A_to_I_Pietro/model_test_2023/src/kidney_dataset/cnn_wavenet_14112023/model_WaveNet_small_log_preprocessing14_11_2023_15_01_48.h5
+[2024-07-31 01:02:53.326697] Predictions concluded. File saved to: /lustre/bio_running/new_basecaller/REDINET_TEST_30_07_2024/REDInet/Package/Results_CNN_inference/a549/SRR12492025.SRR12492026.siADARs.outTable_302610513.gz.predictions.tsv
+[2024-07-31 01:02:53.326747] Computation Finished. Total Elapsed time: 0:09:01.078752
