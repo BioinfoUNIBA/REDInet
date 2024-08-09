@@ -120,7 +120,7 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
 7) Alternatively, a stable and lighter version of the REDInet inference script was released when imputation of missing values is not required or there is a need to use a different genome build:
    
        python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py \
-          -r <REDItools_outTable_filepath> # the path for the input REDItools outTable.gz compressed file indexed with tabix (see point 3 above) - REQUIRED \
+          -r <REDItools_outTable_filepath> # the path for the input REDItools outTable.gz compressed file indexed with tabix (see point 2 above) - REQUIRED \
           -o <output_files_prefix> # the full path for the prefix used to write the 2 output files \
           -c <MinCov> # e.g. 50 - NOT REQUIRED \
           -s <MinAG> # e.g. 3 - NOT REQUIRED \
