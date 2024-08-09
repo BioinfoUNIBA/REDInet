@@ -201,21 +201,6 @@ This is the list of available parameters that can be set: <br />
                        By default is no.
 
 
-## **Notes**:
-REDInet pipeline is optimizes to run on REDItools protocol-derived BAM files. <br />
-So it's recommended to produce the BAM files via the REDItools protocol at:  <br />
-
-     https://www.nature.com/articles/s41596-019-0279-7
-     
-REDInet is set-up to work on stranded RNAseq-derived BAM files. <br />
-In case of unstranded RNAseq-derived BAM files, it's required to infer the strand using the choiced assembly GENCODE annotation GTF file.
-The GTF file has to be sorted and tabix-indexed before its usage. <br />
-This procedure can only be performed with REDItools (version 1). <br /> 
-It's suggested to use the REDItoolDnaRnav13.py in the NPscripts REDItools folder. <br />
-In this case REDInet_Inference.py should be used using the appropriate flag: --U yes. <br />
-REDInet is compatible with every versions of REDItools.  <br />
-
-
 ## REDInet ligh version Options and Outputs:
 REDInet_inference_light_ver.py script can be used when imputation of missing values is not required or you need to align your reads against different genome builds than hg38 and hg19.
 Here the available options:
@@ -257,3 +242,19 @@ B) <output_files_prefix>.predictions.tsv: Tabular files with the predictions mad
    9) snp_proba ---> Probability for the current site being a SNP (negative class)
    10) ed_proba ---> Probability for the current site being an Editing Site (positive class)
    11) y_hat  -----> Output class computed via softmax functions on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
+
+
+## **Notes**:
+REDInet pipeline is optimizes to run on REDItools protocol-derived BAM files. <br />
+So it's recommended to produce the BAM files via the REDItools protocol at:  <br />
+
+     https://www.nature.com/articles/s41596-019-0279-7
+     
+REDInet is set-up to work on stranded RNAseq-derived BAM files. <br />
+In case of unstranded RNAseq-derived BAM files, it's required to infer the strand using the choiced assembly GENCODE annotation GTF file.
+The GTF file has to be sorted and tabix-indexed before its usage. <br />
+This procedure can only be performed with REDItools (version 1). <br /> 
+It's suggested to use the REDItoolDnaRnav13.py in the NPscripts REDItools folder. <br />
+In this case REDInet_Inference.py should be used using the appropriate flag: --U yes. <br />
+REDInet is compatible with every versions of REDItools.  <br />
+
