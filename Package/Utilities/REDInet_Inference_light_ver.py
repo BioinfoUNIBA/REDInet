@@ -1,6 +1,6 @@
 ##################
 ### Code taken adapted and modified from first model prototype at:
-### REDInet/Notebooks&Scripts/CNN_wavenet_kindney_first_model_prototype/CNN_inference.py
+### https://github.com/BioinfoUNIBA/REDInet/blob/main/Notebooks%26Scripts/CNN_wavenet_kindney_first_model_prototype/CNN_inference.py
 ##################
 
 # import basic modules
