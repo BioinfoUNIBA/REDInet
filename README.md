@@ -254,6 +254,6 @@ B) <output_files_prefix>.predictions.tsv: Tabular files with the predictions mad
    6) stop --------> the stop position of the 101 nt-long interval used to perform the REDInet prediction
    7) int_len -----> the expected length of the interval
    8) TabixLen ----> the actual length of the extracted interval from the tabix indexed REDItools outTable
-   9) snp_proba ---> Probability for the current site of being a SNP (negative class)
-   10) ed_proba ---> Probability for the current site of being an Editing Site (positive class)
+   9) snp_proba ---> Probability for the current site being a SNP (negative class)
+   10) ed_proba ---> Probability for the current site being an Editing Site (positive class)
    11) y_hat  -----> Output class computed via softmax functions on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
