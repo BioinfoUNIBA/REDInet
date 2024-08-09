@@ -82,7 +82,7 @@ The REDInet pipeline requires BAM files to be prepared via one of the three vers
 In the REDInet/Package/Data folder are provided 2 BAM files as example.  <br />
 To run REDInet pipeline using REDItools (version 1) follows these steps:   <br />
 
-1) Launch REDItools REDItoolDnaRNA.py script onto the example BAM file with the following setting: <br />
+1) Launch REDItools REDItoolDnaRNA.py script onto the example BAM file with the following setting (settings with low stringency to retrieve complete intervals needed for the REDInet predictions): <br />
 
        python ../REDItools/main/REDItoolDnaRna.py -o ../REDInet/Package/Data -i ../REDInet/Package/Data/SRR12492027.SRR12492028.Aligned.sortedByCoord.out.chr10.bam -f ../REDInet/Package/Utilities/GRCh37.primary_assembly.genome.fa -t 40 -c 0,1 -m 0,255 -v 1 -q 0,30 -e -n 0.0 -N 0.0 -u -l -p -s 2 -g 2 -S
    
