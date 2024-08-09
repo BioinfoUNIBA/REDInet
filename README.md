@@ -232,12 +232,12 @@ A) <output_files_prefix>.feature_vectors.tsv: Tabular file containing features v
 
 B) <output_files_prefix>.predictions.tsv: Tabular files with the predictions made by REDInet selected model (by default it uses the REDIportal model). Each row contains the prediction at a per-site level and has 11 columns:
 
-   1) region ------> the genomic region
-   2) position ----> the genomic position
-   3) Strand ------> the transcript strand infered by REDItools
-   4) FreqAGrna ---> the AG substitution frequency
-   5) start -------> the start position of the 101 nt-long interval used to perform the REDInet prediction
-   6) stop --------> the stop position of the 101 nt-long interval used to perform the REDInet prediction
+   1) region ------> the Genomic Region
+   2) position ----> the Genomic Position
+   3) Strand ------> the transcript Strand infered by REDItools
+   4) FreqAGrna ---> the AG substitution frequency computed by REDItools
+   5) Start -------> the start position of the 101 nt-long interval used to perform the REDInet prediction
+   6) Stop --------> the stop position of the 101 nt-long interval used to perform the REDInet prediction
    7) int_len -----> the expected length of the interval
    8) TabixLen ----> the actual length of the extracted interval from the tabix indexed REDItools outTable
    9) snp_proba ---> Probability for the current site being a SNP (negative class)
