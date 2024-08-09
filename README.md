@@ -242,7 +242,7 @@ B) <output_files_prefix>.predictions.tsv: Tabular files with the predictions mad
      8) TabixLen ----> the actual length of the extracted interval from the tabix indexed REDItools outTable
      9) snp_proba ---> Probability for the current site being a SNP (negative class)
      10) ed_proba ---> Probability for the current site being an Editing Site (positive class)
-     11) y_hat  -----> Output class computed via softmax functions on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
+     11) y_hat  -----> Output class computed via softmax function on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
 
 
 ## **Notes**:
