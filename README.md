@@ -102,7 +102,7 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
    
        tabix -s 1 -b 2 -e 2 -c R outTable_<REDItools SRR12492045.SRR12492046 numeric ID>.gz
 
-5) Launch REDInet help message: <br />
+5) Launch REDInet help message (see REDInet Options section below for further details): <br />
 
        cd ../REDInet/Package/Utilities
        python3 REDInet_Inference.py -h
