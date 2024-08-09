@@ -107,15 +107,24 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
        cd ../REDInet/Package/Utilities
        python3 REDInet_Inference.py -h
 
-6) Example of REDInet basic usage on the REDItools output table:
+6) Example of REDInet basic usage on the REDItools output table using the script enabling missing values imputation (using the reference genome: hg38 or hg19; BETA FEATURE):
 
        python3 ../REDInet/Package/Utilities/REDInet_Inference.py \
           --I <REDItools_outTable_foldepath> # Input REDItools outTable \
           --O <output_folder> # folder where results will be saved \
-          --A <assembly> # Build version: GRCh37 or GRCh38 \
-          --C <MinCov> # e.g. 50 \
-          --M <MinAG> # e.g. 3 \
+          --A <assembly> # Build version: GRCh37 or GRCh38 - REQUIRED \
+          --C <MinCov> # e.g. 50 - NOT REQUIRED \
+          --M <MinAG> # e.g. 3 - NOT REQUIRED \
           --N <REDItools_outTable_name>
+
+7) Alternatively, a stable and lighter version of the REDInet inference script was released when imputation of missing values is not required or there is a need to use a different genome build:
+   
+       python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py \
+          -r <REDItools_outTable_filepath> # the path for the input REDItools outTable.gz compressed file indexed with tabix (see point 3 above) - REQUIRED \
+          -o <output_files_prefix> # the full path for the prefix used to write the 2 output files \
+          -c <MinCov> # e.g. 50 - NOT REQUIRED \
+          -s <MinAG> # e.g. 3 - NOT REQUIRED \
+          -f <MinAGfreq> # e.g 0.01 - NOT REQUIRED
 
 ## **REDInet output**:
 REDInet analysis is a 3 steps process.
@@ -190,9 +199,7 @@ This is the list of available parameters that can be set: <br />
     --U                Declare if the original samples cames from Unstranded RNAseq.
                        Possible choices are: yes or no.
                        By default is no.
-                  
 
-                       
 
 ## **Notes**:
 REDInet pipeline is optimizes to run on REDItools protocol-derived BAM files. <br />
@@ -208,3 +215,42 @@ It's suggested to use the REDItoolDnaRnav13.py in the NPscripts REDItools folder
 In this case REDInet_Inference.py should be used using the appropriate flag: --U yes. <br />
 REDInet is compatible with every versions of REDItools.  <br />
 
+
+## **REDInet ligh version Options and Outputs **:
+REDInet_inference_light_ver.py script can be used when imputation of missing values is not required or you need to align your reads against different genome builds than hg38 and hg19.
+Here the available options:
+
+      python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py -h                                                                                                                             
+      usage: REDInet_Inference_light_ver.py [-h] -r REDITABLE [-m MODEL] [-o OUTPUT_TABLE_PREFIX] [-c COV_THRESHOLD] [-f AGFREQ_THRESHOLD] [-s MINAGSUBS]
+      
+      REDInet_Inference_light_ver.py
+      
+      optional arguments:
+        -h, --help            show this help message and exit
+        -r REDITABLE, --reditable REDITABLE
+                              --reditable: a <str> with the fullpath for the input reditable file.
+        -m MODEL, --model MODEL
+                              --model: a <str> with the fullpath for the model file. [REDIportal model, also the prototype model trained on the kindey dataset can be used at the path Notebooks&Scripts/CNN_wavenet_kindney_first_model_prototype/cnn_wavenet_14112023/model_WaveNet_small_log_preprocessing14_11_2023_15_01_48.h5]
+        -o OUTPUT_TABLE_PREFIX, --output_table_prefix OUTPUT_TABLE_PREFIX
+                              --output_table_prefix: a <str> Indicating the prefix for the output files. [None]
+        -c COV_THRESHOLD, --cov_threshold COV_THRESHOLD
+                              --cov_threshold: a <int> Indicating the minimum coverage to make inference. [50]
+        -f AGFREQ_THRESHOLD, --AGfreq_threshold AGFREQ_THRESHOLD
+                              --AGfreq_threshold: a <float> Indicating the minimum AG substitution frequency to make inference. [0.01]
+        -s MINAGSUBS, --minAGsubs MINAGSUBS
+                              --minAGsubs: a <int> Indicating the minimum AG substitutions to make inference. [3]
+
+The script will iterate over the compressed and tabix indexed REDItools outTable and it will produce two different files with the prefix used into the -o option:
+A) <output_files_prefix>.feature_vectors.tsv: Tabular file containing features vectors of sites with complete intervals (no missing values) satisfying the selected filters.
+B) <output_files_prefix>.predictions.tsv: Tabular files with the predictions made by REDInet selected model (by default it uses the REDIportal model). Each row contains the prediction at a per-site level and has 11 columns:
+   1) region ------> the genomic region
+   2) position ----> the genomic position
+   3) Strand ------> the transcript strand infered by REDItools
+   4) FreqAGrna ---> the AG substitution frequency
+   5) start -------> the start position of the 101 nt-long interval used to perform the REDInet prediction
+   6) stop --------> the stop position of the 101 nt-long interval used to perform the REDInet prediction
+   7) int_len -----> the expected length of the interval
+   8) TabixLen ----> the actual length of the extracted interval from the tabix indexed REDItools outTable
+   9) snp_proba ---> Probability for the current site of being a SNP (negative class)
+   10) ed_proba ---> Probability for the current site of being an Editing Site (positive class)
+   11) y_hat  -----> Output class computed via softmax functions on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
