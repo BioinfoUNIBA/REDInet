@@ -124,7 +124,7 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
           -o <output_files_prefix> # the full path for the prefix used to write the 2 output files \
           -c <MinCov> # e.g. 50 - NOT REQUIRED \
           -s <MinAG> # e.g. 3 - NOT REQUIRED \
-          -f <MinAGfreq> # e.g 0.01 - NOT REQUIRED
+          -f <MinAGfreq> # e.g. 0.01 - NOT REQUIRED
 
 ## **REDInet output**:
 REDInet analysis is a 3 steps process.
