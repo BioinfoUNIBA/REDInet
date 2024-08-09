@@ -232,17 +232,17 @@ A) <output_files_prefix>.feature_vectors.tsv: Tabular file containing features v
 
 B) <output_files_prefix>.predictions.tsv: Tabular files with the predictions made by REDInet selected model (by default it uses the REDIportal model). Each row contains the prediction at a per-site level and has 11 columns:
 
-   1) region ------> the Genomic Region of the query site
-   2) position ----> the Genomic Position of the query site
-   3) Strand ------> the transcript Strand infered by REDItools
-   4) FreqAGrna ---> the AG substitution frequency computed by REDItools
-   5) Start -------> the start position of the 101 nt-long interval used to perform the REDInet prediction
-   6) Stop --------> the stop position of the 101 nt-long interval used to perform the REDInet prediction
-   7) int_len -----> the expected length of the interval
-   8) TabixLen ----> the actual length of the extracted interval from the tabix indexed REDItools outTable
-   9) snp_proba ---> Probability for the current site being a SNP (negative class)
-   10) ed_proba ---> Probability for the current site being an Editing Site (positive class)
-   11) y_hat  -----> Output class computed via softmax functions on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
+     1) region ------> the Genomic Region of the query site
+     2) position ----> the Genomic Position of the query site
+     3) Strand ------> the transcript Strand infered by REDItools
+     4) FreqAGrna ---> the AG substitution frequency computed by REDItools
+     5) Start -------> the start position of the 101 nt-long interval used to perform the REDInet prediction
+     6) Stop --------> the stop position of the 101 nt-long interval used to perform the REDInet prediction
+     7) int_len -----> the expected length of the interval
+     8) TabixLen ----> the actual length of the extracted interval from the tabix indexed REDItools outTable
+     9) snp_proba ---> Probability for the current site being a SNP (negative class)
+     10) ed_proba ---> Probability for the current site being an Editing Site (positive class)
+     11) y_hat  -----> Output class computed via softmax functions on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
 
 
 ## **Notes**:
