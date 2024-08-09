@@ -105,7 +105,17 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
 5) Launch REDInet analysis on the REDItools output table: <br />
 
        cd ../REDInet/Package/Utilities
-       python3 REDInet_Inference.py  
+       python3 REDInet_Inference.py
+
+6) Example of REDInet basic usage:
+
+       python3 ../REDInet/Package/Utilities/REDInet_Inference.py \
+          --I <REDItools_outTable_foldepath> \
+          --O <output_folder> \
+          --A <assembly> \
+          --C <MinCov> \
+          --M <MinAG> \
+          --N <REDItools_outTable_name>
 
 ## **REDInet output**:
 REDInet analysis is a 3 steps process.
