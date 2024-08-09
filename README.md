@@ -201,7 +201,8 @@ This is the list of available parameters that can be set: <br />
                        By default is no.
 
 
-## REDInet ligh version Options and Outputs:
+## **REDInet ligh version Options and Outputs**:
+
 REDInet_inference_light_ver.py script can be used when imputation of missing values is not required or you need to align your reads against different genome builds than hg38 and hg19.
 Here the available options:
 
