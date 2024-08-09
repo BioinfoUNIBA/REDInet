@@ -110,9 +110,9 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
 6) Example of REDInet basic usage on the REDItools output table:
 
        python3 ../REDInet/Package/Utilities/REDInet_Inference.py \
-          --I <REDItools_outTable_foldepath> \
-          --O <output_folder> \
-          --A <assembly> # GRCh37 or GRCh38 \
+          --I <REDItools_outTable_foldepath> # Input REDItools outTable \
+          --O <output_folder> # folder where results will be saved \
+          --A <assembly> # Build version: GRCh37 or GRCh38 \
           --C <MinCov> # e.g. 50 \
           --M <MinAG> # e.g. 3 \
           --N <REDItools_outTable_name>
