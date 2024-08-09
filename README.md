@@ -216,9 +216,9 @@ Here the available options:
         -r REDITABLE, --reditable REDITABLE
                               --reditable: a <str> with the fullpath for the input reditable file.
         -m MODEL, --model MODEL
-                              --model: a <str> with the fullpath for the model file. [REDIportal model, also the prototype model trained on the kindey dataset can be used at the path REDInet/Notebooks&Scripts/CNN_wavenet_kindney_first_model_prototype/cnn_wavenet_14112023/model_WaveNet_small_log_preprocessing14_11_2023_15_01_48.h5]
+                              --model: a <str> with the fullpath for the model file. [by default the REDIportal model, also the prototype model trained on the kindey dataset can be used at the path REDInet/Notebooks&Scripts/CNN_wavenet_kindney_first_model_prototype/cnn_wavenet_14112023/model_WaveNet_small_log_preprocessing14_11_2023_15_01_48.h5]
         -o OUTPUT_TABLE_PREFIX, --output_table_prefix OUTPUT_TABLE_PREFIX
-                              --output_table_prefix: a <str> Indicating the prefix for the output files. [None]
+                              --output_table_prefix: a <str> Indicating the prefix for the output files. [None, if None by default the REDItools outTable prefix file will be used to save output files]
         -c COV_THRESHOLD, --cov_threshold COV_THRESHOLD
                               --cov_threshold: a <int> Indicating the minimum coverage to make inference. [50]
         -f AGFREQ_THRESHOLD, --AGfreq_threshold AGFREQ_THRESHOLD
