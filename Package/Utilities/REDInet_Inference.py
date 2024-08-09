@@ -1,4 +1,4 @@
-import argparse
+import argparse, sys
 import glob, multiprocessing, os, time
 from datetime import datetime
 
@@ -61,25 +61,27 @@ class inference():
             with tqdm(total=number_of_lines, position=worker_id+1, desc=f"{name} sites identification", leave=True) as pbar:
                 for c,l in enumerate(redi):
                     line = l.decode("utf-8").rstrip().split("\t")
-                    if line[0].find("chr") != -1:
-                        if line[2] == "A":
-                            if line[4] != "-":
-                                if int(line[4]) >= self.cov_threshold:
-                                    if "AG" in line[7]:
-                                        AG_rna = eval(line[6])[2]/sum(eval(line[6]))
-                                        if AG_rna >= self.AGfreq_threshold:
-                                            if eval(line[6])[2] >= self.AG_min:
+                    if line[2] == "A":
+                        if line[4] != "-":
+                            if int(line[4]) >= self.cov_threshold:
+                                if "AG" in line[7]:
+                                    AG_rna = eval(line[6])[2]/sum(eval(line[6]))
+                                    if AG_rna >= self.AGfreq_threshold:
+                                        if eval(line[6])[2] >= self.AG_min:
+                                            if self.Strandness == "yes":
                                                 if int(line[3]) != 2:
-                                                        data.append(line)
+                                                    data.append(line)
                                                 else:
                                                     data_discarded.append(line)
                                             else:
-                                                data_discarded.append(line)
+                                                data.append(line)
                                         else:
                                             data_discarded.append(line)
-                                else:
-                                    if "AG" in line[7]:
+                                    else:
                                         data_discarded.append(line)
+                            else:
+                                if "AG" in line[7]:
+                                    data_discarded.append(line)
                     pbar.update(1)
 
         report += "\tTotal evaluated rows in {}: {}\n".format(name, number_of_lines)
@@ -143,37 +145,34 @@ class inference():
                     missings = [i  for i in range(start, stop+1, 1) if i not in srr_interval.iloc[:, 1].tolist()]
 
                     temp = []
-                    if self.Strandness != "yes":
-                        
-                        if self.Imputations == "yes" and n_missings > 0 and n_missings <=self.Max_missings:
-    
-                            else:
-                                freqs_impud = {"A":"[1,0,0,0]", "C":"[0,1,0,0]", "G":"[0,0,1,0]", "T":"[0,0,0,1]"}
-                                complement = {"A":"T", "C":"G", "G":"C", "T":"A"}
-        
-                                if strand != 0:
-        
-                                    for position in missings:
-                                        base = genome.fetch(site.Region, int(position)-1, int(position))
-                                        value = freqs_impud.get(base)
-                                        if value:
-                                            temp.append([site.Region, position, base, strand, value])
-                                        else:
-                                            pass
-        
+                    if self.Imputations == "yes" and n_missings > 0 and n_missings <=self.Max_missings :
+
+                        freqs_impud = {"A":"[1,0,0,0]", "C":"[0,1,0,0]", "G":"[0,0,1,0]", "T":"[0,0,0,1]"}
+                        complement = {"A":"T", "C":"G", "G":"C", "T":"A"}
+
+                        if strand != 0:
+
+                            for position in missings:
+                                base = genome.fetch(site.Region, int(position)-1, int(position))
+                                value = freqs_impud.get(base)
+                                if value:
+                                    temp.append([site.Region, position, base, strand, value])
                                 else:
-        
-                                    for position in missings:
-                                        base = genome.fetch(site.Region, int(position)-1, int(position))
-                                        complement_base = complement.get(base)
-                                        if complement_base:
-                                            value = freqs_impud.get(complement_base)
-                                            if value:
-                                                temp.append([site.Region, position, complement_base, strand, value])
-                                            else:
-                                                pass
-                                        else:
-                                            pass
+                                    pass
+
+                        else:
+
+                            for position in missings:
+                                base = genome.fetch(site.Region, int(position)-1, int(position))
+                                complement_base = complement.get(base)
+                                if complement_base:
+                                    value = freqs_impud.get(complement_base)
+                                    if value:
+                                        temp.append([site.Region, position, complement_base, strand, value])
+                                    else:
+                                        pass
+                                else:
+                                    pass
 
                     if len(temp) > 0 :
 
