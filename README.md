@@ -241,8 +241,11 @@ Here the available options:
                               --minAGsubs: a <int> Indicating the minimum AG substitutions to make inference. [3]
 
 The script will iterate over the compressed and tabix indexed REDItools outTable and it will produce two different files with the prefix used into the -o option:
+
 A) <output_files_prefix>.feature_vectors.tsv: Tabular file containing features vectors of sites with complete intervals (no missing values) satisfying the selected filters.
+
 B) <output_files_prefix>.predictions.tsv: Tabular files with the predictions made by REDInet selected model (by default it uses the REDIportal model). Each row contains the prediction at a per-site level and has 11 columns:
+
    1) region ------> the genomic region
    2) position ----> the genomic position
    3) Strand ------> the transcript strand infered by REDItools
