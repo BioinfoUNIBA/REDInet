@@ -107,26 +107,26 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
        cd ../REDInet/Package/Utilities
        python3 REDInet_Inference.py -h
 
-6) Example of REDInet basic usage on the REDItools output table using the script enabling missing values imputation (using the reference genome: hg38 or hg19; BETA FEATURE):
+6) Example of the REDInet_Inference.py (multiprocessing version) basic usage on REDItools output table. This script version enables for both the parallel processing of several REDItools outTables and the imputation of missing values (using the reference genome: hg38 or hg19; BETA FEATURE):
 
        python3 ../REDInet/Package/Utilities/REDInet_Inference.py \
-          --I <REDItools_outTable_foldepath> # Input REDItools outTable \
+          --I <REDItools_outTable_foldepath> # Input REDItools outTable/s folder-path REQUIRED \
           --O <output_folder> # folder where results will be saved \
-          --A <assembly> # Build version: GRCh37 or GRCh38 - REQUIRED \
+          --A <assembly> # Build version: either GRCh37 or GRCh38 - REQUIRED \
           --C <MinCov> # e.g. 50 - NOT REQUIRED \
           --M <MinAG> # e.g. 3 - NOT REQUIRED \
-          --N <REDItools_outTable_name>
+          --N <REDItools_outTable_name/s> # REQUIRED
 
-7) Alternatively, a stable and lighter version of the REDInet inference script was released when imputation of missing values is not required or there is a need to use a different genome build:
+7) Alternatively, a stable and lighter version of the REDInet script was released. It is useful when parallel computation via multiprocessing is not required and/or when the imputation of missing values has to be carried out on a different genome build. It is strongly reccomended when the parallelization over different samples has to be computed via High-Throughput Computing (HTC) clusters. Below an example of the basic usage of the REDInet_Inference_ligth_ver.py script:
    
        python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py \
           -r <REDItools_outTable_filepath> # the path for the input REDItools outTable.gz compressed file indexed with tabix (see point 2 above) - REQUIRED \
-          -o <output_files_prefix> # the full path for the prefix used to write the 2 output files \
+          -o <output_files_prefix> # the full path for the prefix used to write the 3 output files - NOT REQUIRED \
           -c <MinCov> # e.g. 50 - NOT REQUIRED \
           -s <MinAG> # e.g. 3 - NOT REQUIRED \
           -f <MinAGfreq> # e.g. 0.01 - NOT REQUIRED
 
-## **REDInet output**:
+## **REDInet (multiprocessing) output**:
 REDInet analysis is a 3 steps process.
 At the end of each step a file is automatically produced and stored in the choiced output directory. 
 1) Genomic positions are filtered on the basis of minimum base coverage, minimum A to G substitution rate and minimum number of guanosine in place of adenines.  <br />
@@ -145,7 +145,7 @@ At the end of each step a file is automatically produced and stored in the choic
    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;../<results folder>/<.gz name>_predictions.txt <br /> <br />
    If no sequence has been produced, due to the previous filtering steps,  than the <.gz name>_predictions.txt file is empty. <br /> 
           
-## **REDInet Options**:
+## **REDInet (multiprocessing) Options**:
 REDInet settings can be tuned to accomodate specific analysis needs.  <br />
 This is the list of available parameters that can be set: <br />
 
@@ -203,28 +203,34 @@ This is the list of available parameters that can be set: <br />
 
 ## **REDInet ligh version Options and Outputs**:
 
-REDInet_inference_light_ver.py script can be used when imputation of missing values is not required or you need to align your reads against different genome builds than hg38 and hg19.
+REDInet_inference_light_ver.py script can be used when multiprocessing-based parallelization is not required or when it has be carried out via HTC systems. Furthermore, with this implementation the imputation of missing values can be obtained also using differente genome builds than hg38 or hg19.
 Here the available options:
 
       python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py -h                                                                                                                             
-      usage: REDInet_Inference_light_ver.py [-h] -r REDITABLE [-m MODEL] [-o OUTPUT_TABLE_PREFIX] [-c COV_THRESHOLD] [-f AGFREQ_THRESHOLD] [-s MINAGSUBS]
-      
+      usage: REDInet_Inference_light_ver.py [-h] -r REDITABLE [-m MODEL] [-o OUTPUT_TABLE_PREFIX] [-c COV_THRESHOLD] [-f AGFREQ_THRESHOLD] [-s MINAGSUBS] [-i MAX_IMP]
+                                      [-ref REF_FP]
+
       REDInet_Inference_light_ver.py
       
       optional arguments:
         -h, --help            show this help message and exit
         -r REDITABLE, --reditable REDITABLE
-                              --reditable: a <str> with the fullpath for the input reditable file.
+                              --reditable: a <str> with the fullpath for the input tabix indexed reditable file.
         -m MODEL, --model MODEL
-                              --model: a <str> with the fullpath for the model file. [by default the REDIportal model, also the prototype model trained on the kindey dataset can be used at the path REDInet/Notebooks&Scripts/CNN_wavenet_kindney_first_model_prototype/cnn_wavenet_14112023/model_WaveNet_small_log_preprocessing14_11_2023_15_01_48.h5]
+                              --model: a <str> with the fullpath for the model file. [REDIportal model]
         -o OUTPUT_TABLE_PREFIX, --output_table_prefix OUTPUT_TABLE_PREFIX
-                              --output_table_prefix: a <str> Indicating the prefix for the output files. [None, if None by default the REDItools outTable prefix file will be used to save output files]
+                              --output_table_prefix: a <str> Indicating the prefix for the output files. [None]
         -c COV_THRESHOLD, --cov_threshold COV_THRESHOLD
                               --cov_threshold: a <int> Indicating the minimum coverage to make inference. [50]
         -f AGFREQ_THRESHOLD, --AGfreq_threshold AGFREQ_THRESHOLD
                               --AGfreq_threshold: a <float> Indicating the minimum AG substitution frequency to make inference. [0.01]
         -s MINAGSUBS, --minAGsubs MINAGSUBS
                               --minAGsubs: a <int> Indicating the minimum AG substitutions to make inference. [3]
+        -i MAX_IMP, --max_imp MAX_IMP
+                              --max_imp: a <int> Indicating the maximum number of missing value to make imputation of missing values in extracted intervals. [0 - No
+                              Imputations]
+        -ref REF_FP, --ref_fp REF_FP
+                              --ref_fp: a <str> indicating the reference file path to be used for imputation of missing values in extracted intervals. [None]
 
 The script will iterate over the compressed and tabix indexed REDItools outTable and it will produce two different files with the prefix used into the -o option:
 
@@ -244,6 +250,7 @@ B) <output_files_prefix>.predictions.tsv: Tabular file with the predictions made
      10) ed_proba ---> Probability for the current site being an Editing Site (positive class)
      11) y_hat  -----> Output class computed via softmax function on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
 
+C) <output_files_prefix>.REDInet_ligth_ver_parameters.tsv: a log file storing the used options and other information about the performed computation.
 
 ## **Notes**:
 REDInet pipeline is optimizes to run on REDItools protocol-derived BAM files. <br />
