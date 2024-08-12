@@ -203,7 +203,7 @@ This is the list of available parameters that can be set: <br />
 
 ## **REDInet ligh version Options and Outputs**:
 
-REDInet_inference_light_ver.py script can be used when multiprocessing-based parallelization is not required or when it has be carried out via HTC systems. Furthermore, with this implementation the imputation of missing values can be obtained also using differente genome builds than hg38 or hg19.
+REDInet_inference_light_ver.py script can be used when multiprocessing-based parallelization is not required or when it has be carried out via HTC systems. Furthermore, with this implementation the imputation of missing values can be obtained also using different genome builds than hg38 or hg19.
 Here the available options:
 
       python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py -h                                                                                                                             
