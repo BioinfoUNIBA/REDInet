@@ -70,9 +70,10 @@ To create the required enviroment:
    
        samtools faidx GRCh37.primary_assembly.genome.fa
    
-10) Make REDInet_inference.py executable:
+10) Make REDInet inference scripts executable:
 
         chmod u+x REDInet_Inference.py
+        chmod u+x REDInet_Inference_light_ver.py
     
         cd ..
 
@@ -105,9 +106,10 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
 5) Launch REDInet help message (see REDInet Options section below for further details): <br />
 
        cd ../REDInet/Package/Utilities
-       python3 REDInet_Inference.py -h
+       python3 REDInet_Inference.py -h             # multiprocessing version
+       python3 REDInet_Inference_light_ver.py -h   # lighter version (simpler usage)
 
-6) Example of the REDInet_Inference.py (multiprocessing version) basic usage on REDItools output table. This script version enables for both the parallel processing of several REDItools outTables and the imputation of missing values (using the reference genome: hg38 or hg19; BETA FEATURE):
+7) Example of the REDInet_Inference.py (multiprocessing version) basic usage on REDItools output table. This script version enables for both the parallel processing of several REDItools outTables and the imputation of missing values (using the reference genome: hg38 or hg19; BETA FEATURE):
 
        python3 ../REDInet/Package/Utilities/REDInet_Inference.py \
           --I <REDItools_outTable_foldepath> # Input REDItools outTable/s folder-path REQUIRED \
@@ -117,7 +119,7 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
           --M <MinAG> # e.g. 3 - NOT REQUIRED \
           --N <REDItools_outTable_name/s> # REQUIRED
 
-7) Alternatively, a stable and lighter version of the REDInet script was released. It is useful when parallel computation via multiprocessing is not required and/or when the imputation of missing values has to be carried out on a different genome build. It is strongly reccomended when the parallelization over different samples has to be computed via High-Throughput Computing (HTC) clusters. Below an example of the basic usage of the REDInet_Inference_ligth_ver.py script:
+8) Alternatively, a stable and lighter version of the REDInet script was released with a more user-friendly syntax. It is useful when parallel computation via (Python) multiprocessing is not required and/or when the imputation of missing values has to be carried out on different genome builds. It is also strongly reccomended when the parallelization over different samples has to be performed via High-Throughput Computing (HTC) clusters. Below an example of the basic usage of the REDInet_Inference_ligth_ver.py script:
    
        python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py \
           -r <REDItools_outTable_filepath> # the path for the input REDItools outTable.gz compressed file indexed with tabix (see point 2 above) - REQUIRED \
@@ -236,19 +238,21 @@ The script will iterate over the compressed and tabix indexed REDItools outTable
 
 A) <output_files_prefix>.feature_vectors.tsv: Tabular file containing features vectors of sites with complete intervals (no missing values) satisfying the selected filters.
 
-B) <output_files_prefix>.predictions.tsv: Tabular file with the predictions made by REDInet selected model (by default it uses the REDIportal model) on the extracted features vectors. Each row contains the prediction at a per-site level and has 11 columns:
+B) <output_files_prefix>.predictions.tsv: Tabular file with the predictions made by REDInet selected model (by default it uses the REDIportal model) on the extracted features vectors. Each row contains the prediction at a per-site level and has 12 columns:
 
+     region	position	Strand	FreqAGrna	[A,C,G,T]	start	stop	int_len	TabixLen	snp_proba	ed_proba	y_hat
      1) region ------> the Genomic Region of the query site
      2) position ----> the Genomic Position of the query site
      3) Strand ------> the transcript Strand infered by REDItools
      4) FreqAGrna ---> the AG substitution frequency computed by REDItools
-     5) Start -------> the start position of the 101 nt-long interval used to perform the REDInet prediction
-     6) Stop --------> the stop position of the 101 nt-long interval used to perform the REDInet prediction
-     7) int_len -----> the expected length of the interval
-     8) TabixLen ----> the actual length of the extracted interval from the tabix indexed REDItools outTable
-     9) snp_proba ---> Probability for the current site being a SNP (negative class)
-     10) ed_proba ---> Probability for the current site being an Editing Site (positive class)
-     11) y_hat  -----> Output class computed via softmax function on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
+     5) [A,C,G,T] ---> the REDItools pilepup vector (count of aligned A,C,G and T bases on the query site)
+     6) Start -------> the start position of the 101 nt-long interval used to perform the REDInet prediction
+     7) Stop --------> the stop position of the 101 nt-long interval used to perform the REDInet prediction
+     8) int_len -----> the length of the interval used for the inference on the query site
+     9) TabixLen ----> the length of the extracted interval from the tabix indexed REDItools outTable before the imputation (when the imputation of missing values is activated, the difference between this value and the previous column, indicate the number of imputed positions for the current interval and query site)
+     10) snp_proba ---> Probability for the current site being a SNP (negative class)
+     11) ed_proba ---> Probability for the current site being an Editing Site (positive class)
+     12) y_hat  -----> Output class computed via softmax function on SNP/Editing probabilities. 0: Predicted SNP / 1: Predicted Editing Site
 
 C) <output_files_prefix>.REDInet_ligth_ver_parameters.tsv: a log file storing the used options and other information about the performed computation.
 
