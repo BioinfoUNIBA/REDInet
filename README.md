@@ -240,7 +240,6 @@ A) <output_files_prefix>.feature_vectors.tsv: Tabular file containing features v
 
 B) <output_files_prefix>.predictions.tsv: Tabular file with the predictions made by REDInet selected model (by default it uses the REDIportal model) on the extracted features vectors. Each row contains the prediction at a per-site level and has 12 columns:
 
-     region	position	Strand	FreqAGrna	[A,C,G,T]	start	stop	int_len	TabixLen	snp_proba	ed_proba	y_hat
      1) region ------> the Genomic Region of the query site
      2) position ----> the Genomic Position of the query site
      3) Strand ------> the transcript Strand infered by REDItools
