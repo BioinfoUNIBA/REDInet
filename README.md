@@ -119,7 +119,7 @@ To run REDInet pipeline using REDItools (version 1) follows these steps:   <br /
           --M <MinAG> # e.g. 3 - NOT REQUIRED \
           --N <REDItools_outTable_name/s> # REQUIRED
 
-8) Alternatively, a stable and lighter version of the REDInet script was released with a more user-friendly syntax. It is useful when parallel computation via (Python) multiprocessing is not required and/or when the imputation of missing values has to be carried out on different genome builds. It is also strongly reccomended when the parallelization over different samples has to be performed via High-Throughput Computing (HTC) clusters. Below an example of the basic usage of the REDInet_Inference_ligth_ver.py script:
+8) Alternatively, a stable and lighter version of the REDInet script was released with a more user-friendly syntax. It is useful when parallel computation via (Python) multiprocessing is not required and/or when the imputation of missing values has to be carried out on different genome builds. It is also strongly reccomended when the parallelization over different samples has to be performed via High-Throughput Computing (HTC) clusters. Below an example of the basic usage of the REDInet_Inference_light_ver.py script:
    
        python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py \
           -r <REDItools_outTable_filepath> # the path for the input REDItools outTable.gz compressed file indexed with tabix (see point 2 above) - REQUIRED \
