@@ -4,7 +4,7 @@
 ##################
 
 # import basic modules
-import pysam, gzip,os
+import pysam, gzip, os, sys
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -33,8 +33,21 @@ def from_2_to_3_dimensions(pandas_df, n_features):
     array_3d = np.stack(array_list)
     return array_3d
 
+def get_compl(base):
+    rule = {"A":"T", "C":"G", "G":"C", "T":"A"}
+    compl = rule[base]
+    return compl
+
 ### define main function ###
-def CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepath=None, cov_threshold=50, AGfreq_threshold=0.01, minAGsubs=3):
+def CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepath=None, 
+                  cov_threshold=50, AGfreq_threshold=0.01, minAGsubs=3, max_imp=0, ref_fp=None):
+
+    # if imputation are required a valid genome has to be provided
+    if max_imp > 0 and ref_fp == None:
+        sys.exit(f"[{datetime.now()}] Error! Imputation can be done only if a reference genome is provided! Please provide a reference fasta file (the same used during alignment and REDItools step) with -ref flag or set imputation to 0. Exiting.")
+    elif max_imp > 0 and ref_fp != None:
+        print(f"[{datetime.now()}] Imputation on missing values is activated using input Reference file.", flush=True)
+        ref = pysam.FastaFile(ref_fp)
 
     if output_table_prefix_filepath == None:
         output_table_prefix_filepath = reditable_filepath
@@ -80,13 +93,13 @@ def CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepa
     intervals = []
     starttime_preds = datetime.now()
     total_extracted = 0
+    total_imputed = 0
 
     features_extracted_filepath = output_table_prefix_filepath + ".feature_vectors.tsv"
     features_extracted = open(features_extracted_filepath, "w")
     # mantain only non chrM regions
     df = editing.query("Region != 'chrM'")
     print(f"[{datetime.now()}] Loading reditable with tabix and pysam:", reditable_filepath, flush=True)
-    start_time = datetime.now()
     srr = pysam.TabixFile(reditable_filepath)
     # extract pos examples
     with tqdm(total=df.shape[0], position=0, leave=True) as pbar:
@@ -98,12 +111,34 @@ def CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepa
             for s in srr.fetch(site.Region, start-1, stop):
                 srr_interval.append(s.split("\t"))
             srr_interval = pd.DataFrame(srr_interval, columns=columns)
+            srr_interval["Position"] = srr_interval["Position"].astype("int")
+            # retrieve inferred strand
+            strand = site.Strand
             # assess wheter interval is of the required length and if the entire interval is on the same strand
-            if srr_interval.shape[0] == interval and len(set(srr_interval["Strand"])) == 1:
-                strand = site.Strand
-                #print("DEBUG - Strand type:", type(strand), "Strand:", strand)
-                if strand in ["0","1"]: # avoid unstranded sites (0 --> minus strand; 1 --> plus strand)
-                    intervals.append([site.Region, site.Position, site.Strand, AGrna, start, stop, stop-start + 1, srr_interval.shape[0]])
+            if len(set(srr_interval["Strand"])) == 1 and strand in ["0","1"]: # and avoid unstranded sites (0 --> minus strand; 1 --> plus strand)
+                tabix_int_len = srr_interval.shape[0]
+                if tabix_int_len != interval:
+                    # make imputation
+                    expected_interval = pd.DataFrame([int(i) for i in np.arange(start, stop+1)], columns=["Position"])
+                    expected_interval = pd.merge(expected_interval, srr_interval, how="left", left_on=["Position"], right_on=["Position"])
+                    to_impute = expected_interval[expected_interval["Ref"].isna()]
+                    if to_impute.shape[0] <= max_imp:
+                        imputed = []
+                        for p in to_impute["Position"].values:
+                            # get base
+                            b = ref.fetch(site.Region, p-1, p)
+                            if strand == "0":
+                                b = get_compl(b)
+                            sim_align = str( [int(_) for _ in list(ohe.transform(np.array([b]).reshape(-1,1)).toarray()[0]*cov_threshold)] )
+                            curr_imp = [site.Region, p, b, strand, cov_threshold, 30, sim_align, "-", 0.00, "-", "-", "-", "-", "-"]
+                            imputed.append(curr_imp)
+                        imputed = pd.DataFrame(imputed, columns=srr_interval.columns)
+                        srr_interval = pd.concat([srr_interval, imputed])
+                        srr_interval.sort_values(by="Position", inplace=True)
+                        srr_interval.reset_index(inplace=True, drop=True)
+                        total_imputed += 1
+                if srr_interval.shape[0] == interval: # complete final interval after imputation (if performed)
+                    intervals.append([site.Region, site.Position, site.Strand, AGrna, site._7, start, stop, srr_interval.shape[0], tabix_int_len])
                     total_extracted += 1
                     # encode features vector and write to disk
                     seq = srr_interval.Ref.values.reshape(-1,1)
@@ -124,15 +159,18 @@ def CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepa
                     # save to disk (append mode)
                     site.to_csv(features_extracted, mode="a", sep="\t", header = None, index=None)
             pbar.update(1)
-    # create dataframe for editing sites candidates with complete intervaal
+    # create dataframe for editing sites candidates with complete interval
     intervals = pd.DataFrame(intervals)
-    print(f"[{datetime.now()}] Total extracted Editing sites: {total_extracted}.", flush=True)
-    stop_time_global = datetime.now()
+    print(f"[{datetime.now()}] Total extracted Editing sites (imputed): {total_extracted} ({total_imputed}).", flush=True)
     print(f"[{datetime.now()}] Features Extraction Finished. Elapsed time {datetime.now()-starttime_preds}.", flush=True)
+    # close opened files
     features_extracted.close()
+    srr.close()
+    if max_imp > 0 and ref_fp != None:
+        ref.close()
 
     # start prediction step on the extracted features
-    # loading features and preprocess these for inference
+    # loading features and preprocess these for inference procedures
     ###--- START LOADING OF DATA ---###
     print(f"[{datetime.now()}] Loading features extracted of editing candidates from: {features_extracted_filepath}", flush=True)
     X = pd.read_table(features_extracted_filepath, header=None)
@@ -163,9 +201,24 @@ def CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepa
     intervals["snp_proba"] = y_hat_proba[:,0]
     intervals["ed_proba"] = y_hat_proba[:,1]
     intervals["y_hat"] = y_hat
-    intervals.columns = ["region", "position", "Strand", "FreqAGrna", "start", "stop", "int_len", "TabixLen", "snp_proba", "ed_proba", "y_hat"]
+    intervals.columns = ["region", "position", "Strand", "FreqAGrna", "[A,C,G,T]", "start", "stop", "int_len", "TabixLen", "snp_proba", "ed_proba", "y_hat"]
     # save to disk
     intervals.to_csv(output_table_prefix_filepath+".predictions.tsv", sep="\t", index=None)
+
+    # print parameters
+    print(f"[{datetime.now()}] Writing log for parameters used and computation time.", flush=True)
+    with open(output_table_prefix_filepath+".REDInet_ligth_ver_parameters.tsv", "w") as log_param:
+        log_param.write("###### REDInet_ligth_ver.py\n")
+        log_param.write(f"### Start time: {starttime}.\n")
+        log_param.write("### Used Parameters:\n")
+        for value,text in zip([reditable_filepath, model_filepath, output_table_prefix_filepath, 
+                      cov_threshold, AGfreq_threshold, minAGsubs, max_imp, ref_fp],
+                      ["reditable_filepath", "model_filepath", "output_table_prefix_filepath", 
+                       "cov_threshold", "AGfreq_threshold", "minAGsubs", "max_imp", "ref_fp"] 
+                   ):
+            log_param.write(f"\t- {text} ---> {value}\n")
+        log_param.write(f"### End Time: {datetime.now()}.")
+
     print(f"[{datetime.now()}] Predictions concluded. File saved to: {output_table_prefix_filepath+'.predictions.tsv'}", flush=True)
     print(f"[{datetime.now()}] Computation Finished. Total Elapsed time: {datetime.now()-starttime}", flush=True)
 
@@ -176,7 +229,7 @@ if __name__ == "__main__":
                         "--reditable",
                         required=True,
                         type=str,
-                        help="--reditable: \t a <str> with the fullpath for the input reditable file.")
+                        help="--reditable: \t a <str> with the fullpath for the input tabix indexed reditable file.")
     parser.add_argument("-m",
                         "--model",
                         required=False,
@@ -207,6 +260,17 @@ if __name__ == "__main__":
                         default=3,
                         type=int,
                         help="--minAGsubs: \t a <int> Indicating the minimum AG substitutions to make inference. [3]")
+    parser.add_argument("-i",
+                        "--max_imp",
+                        required=False,
+                        type=int,
+                        default=0,
+                        help="--max_imp: \t a <int> Indicating the maximum number of missing value to make imputation of missing values in extracted intervals. [0 - No Imputations]")
+    parser.add_argument("-ref",
+                        "--ref_fp",
+                        required=False,
+                        default=None,
+                        help="--ref_fp: \t a <str> indicating the reference file path to be used for imputation of missing values in extracted intervals. [None]")
 
     args = parser.parse_args()
     reditable = args.reditable
@@ -215,6 +279,8 @@ if __name__ == "__main__":
     cov_threshold = args.cov_threshold
     AGfreq_threshold = args.AGfreq_threshold
     minAGsubs = args.minAGsubs
+    max_imp = args.max_imp
+    ref_fp = args.ref_fp
 
     # CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepath=None, cov_threshold=50, AGfreq_threshold=0.01)
     # print some starting info related to version, used program and to the input arguments
@@ -229,4 +295,6 @@ if __name__ == "__main__":
                   output_table_prefix_filepath=output_table_prefix, 
                   cov_threshold=cov_threshold, 
                   AGfreq_threshold=AGfreq_threshold,
-                  minAGsubs=minAGsubs)
+                  minAGsubs=minAGsubs,
+                  max_imp=max_imp,
+                  ref_fp=ref_fp)
