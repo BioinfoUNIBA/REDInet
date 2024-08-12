@@ -218,23 +218,30 @@ Here the available options:
         -h, --help            show this help message and exit
         -r REDITABLE, --reditable REDITABLE
                               --reditable: a <str> with the fullpath for the input tabix indexed reditable file.
+                              
         -m MODEL, --model MODEL
                               --model: a <str> with the fullpath for the model file. [by default the REDIportal model. It is also possible to use the first model prototype trained on the kidney dataset indicating the h5 file downloadable from this GitHub repo at REDInet/Notebooks&Scripts/CNN_wavenet_kindney_first_model_prototype/cnn_wavenet_14112023/model_WaveNet_small_log_preprocessing14_11_2023_15_01_48.h5 ]
+        
         -o OUTPUT_TABLE_PREFIX, --output_table_prefix OUTPUT_TABLE_PREFIX
                               --output_table_prefix: a <str> Indicating the prefix for the output files. [None. If none the same prefix as the input Tabix-indexed  REDItools outTable will be used]
+        
         -c COV_THRESHOLD, --cov_threshold COV_THRESHOLD
                               --cov_threshold: a <int> Indicating the minimum coverage to make inference. [50]
+        
         -f AGFREQ_THRESHOLD, --AGfreq_threshold AGFREQ_THRESHOLD
                               --AGfreq_threshold: a <float> Indicating the minimum AG substitution frequency to make inference. [0.01]
+        
         -s MINAGSUBS, --minAGsubs MINAGSUBS
                               --minAGsubs: a <int> Indicating the minimum AG substitutions to make inference. [3]
+        
         -i MAX_IMP, --max_imp MAX_IMP
                               --max_imp: a <int> Indicating the maximum number of missing value to make imputation of missing values in extracted intervals. [0 - No
                               Imputations. It require the genome fasta file used for the aligments and the REDItools step]
+        
         -ref REF_FP, --ref_fp REF_FP
                               --ref_fp: a <str> indicating the reference file path to be used for imputation of missing values in extracted intervals. [None]
 
-The script will iterate over the compressed and tabix indexed REDItools outTable and it will produce two different files with the prefix used into the -o option:
+The script will iterate over the compressed and tabix indexed REDItools outTable and it will produce 3 different files with the prefix used into the -o option:
 
 A) <output_files_prefix>.feature_vectors.tsv: Tabular file containing features vectors of sites with complete intervals (no missing values) satisfying the selected filters.
 
