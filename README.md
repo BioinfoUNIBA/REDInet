@@ -236,7 +236,7 @@ Here the available options:
         
         -i MAX_IMP, --max_imp MAX_IMP
                               --max_imp: a <int> Indicating the maximum number of missing values to make imputation on extracted intervals. [0 - No
-                              Imputations. It require the genome fasta file used for the aligments and the REDItools step]
+                              Imputations. It requires the genome fasta file used for the aligments and the REDItools step]
         
         -ref REF_FP, --ref_fp REF_FP
                               --ref_fp: a <str> indicating the reference file path to be used for imputation of missing values in extracted intervals. [None]
