@@ -235,7 +235,7 @@ Here the available options:
                               --minAGsubs: a <int> Indicating the minimum AG substitutions to make inference. [3]
         
         -i MAX_IMP, --max_imp MAX_IMP
-                              --max_imp: a <int> Indicating the maximum number of missing value to make imputation of missing values in extracted intervals. [0 - No
+                              --max_imp: a <int> Indicating the maximum number of missing values to make imputation on extracted intervals. [0 - No
                               Imputations. It require the genome fasta file used for the aligments and the REDItools step]
         
         -ref REF_FP, --ref_fp REF_FP
