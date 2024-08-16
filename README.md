@@ -205,7 +205,7 @@ This is the list of available parameters that can be set: <br />
 
 ## **REDInet light version Options and Outputs (user-friendly)**:
 
-REDInet_inference_light_ver.py script can be used when multiprocessing-based parallelization is not required or when it has be carried out via HTC systems. Furthermore, with this implementation the imputation of missing values can be obtained also using different genome builds than hg38 or hg19.
+**REDInet_inference_light_ver.py** script can be used when multiprocessing-based parallelization is not required or when it has be carried out via HTC systems. Furthermore, with this implementation the imputation of missing values can be obtained also using different genome builds than hg38 or hg19.
 Here the available options:
 
       python3 ../REDInet/Package/Utilities/REDInet_Inference_light_ver.py -h                                                                                                                             
@@ -269,11 +269,11 @@ So it's recommended to produce the BAM files via the REDItools protocol at:  <br
      https://www.nature.com/articles/s41596-019-0279-7
      
 REDInet is set-up to work on stranded RNAseq-derived BAM files. <br />
-In case of unstranded RNAseq-derived BAM files, it's required to infer the strand using the choiced assembly GENCODE annotation GTF file.
+In case of unstranded RNAseq-derived BAM files (not-raccomanded), it's required to infer the strand via REDItools using the choiced assembly GENCODE annotation GTF (GFF) file.
 The GTF file has to be sorted and tabix-indexed before its usage. <br />
 This procedure can only be performed with REDItools (version 1). <br /> 
 It's suggested to use the REDItoolDnaRnav13.py in the NPscripts REDItools folder. <br />
-In this case REDInet_Inference.py should be used using the appropriate flag: --U yes. <br />
+In this case, REDInet_Inference.py should be used using the appropriate flag: --U yes (experimental strategy). <br />
 REDInet is compatible with every versions of REDItools.  <br />
 
 To note, the REDInet scripts are very lightweigthed. After the required preliminar REDItools steps, these can be easily run on standard machines. The reccomended and tested hardware set-up is: 4 cpus, 32 GB RAM. The computation time is roughly 30 minutes per REDItools table (but it strictly depends on the sequencing depth). REDInet scripts were also successfully tested on Apple M3 Pro. No GPU acceleration is requested.
