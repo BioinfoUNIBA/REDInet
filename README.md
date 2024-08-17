@@ -276,5 +276,5 @@ It's suggested to use the REDItoolDnaRnav13.py in the NPscripts REDItools folder
 In this case, REDInet_Inference.py should be used using the appropriate flag: --U yes (experimental strategy). <br />
 REDInet is compatible with every versions of REDItools.  <br />
 
-To note, the REDInet scripts are very lightweigthed. After the required preliminar REDItools steps, these can be easily run on standard machines. The reccomended and tested hardware set-up is: 4 cpus, 32 GB RAM. The computation time is roughly 30 minutes per REDItools table (but it strictly depends on the sequencing depth). REDInet scripts were also successfully tested on Apple M3 Pro. No GPU acceleration is requested.
+To note, the REDInet scripts are very lightweigthed. After the required preliminar REDItools steps, these can be easily run on standard machines. The reccomended and tested hardware set-up is: 4 cpus, 16/32 GB RAM. The computation time is roughly 30 minutes per REDItools table (but it strictly depends on the sequencing depth). REDInet scripts were also successfully tested on Apple M3 Pro. No GPU acceleration is requested.
  
