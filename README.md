@@ -269,7 +269,7 @@ So it's recommended to produce the BAM files via the REDItools protocol at:  <br
      https://www.nature.com/articles/s41596-019-0279-7
      
 REDInet is set-up to work on stranded RNAseq-derived BAM files. <br />
-In case of unstranded RNAseq-derived BAM files (not-raccomanded), it's required to infer the strand via REDItools using the choiced assembly GENCODE annotation GTF (GFF) file.
+In case of unstranded RNAseq-derived BAM files (not-recommended), it's required to infer the strand via REDItools using the choiced assembly GENCODE annotation GTF (GFF) file.
 The GTF file has to be sorted and tabix-indexed before its usage. <br />
 This procedure can only be performed with REDItools (version 1). <br /> 
 It's suggested to use the REDItoolDnaRnav13.py in the NPscripts REDItools folder. <br />
