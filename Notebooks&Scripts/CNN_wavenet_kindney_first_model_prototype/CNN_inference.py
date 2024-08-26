@@ -1,5 +1,5 @@
 ##################
-### Author: Adriano Fonzino. email: adriano.fonzino@uniba.it Date: 11/2023
+###
 ##################
 
 # import basic modules
