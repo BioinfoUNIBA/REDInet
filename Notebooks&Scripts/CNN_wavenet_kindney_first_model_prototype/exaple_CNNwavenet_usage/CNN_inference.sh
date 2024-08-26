@@ -1,5 +1,5 @@
 #!/bin/bash
-### Author: Adriano Fonzino email: adriano.fonzino@uniba.it
+###
 
 source /lustrehome/afonzino/anaconda3/bin/activate CtoU
 source /lustrehome/afonzino/NanoSpeech/venv/bin/activate
