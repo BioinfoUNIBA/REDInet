@@ -277,4 +277,21 @@ In this case, REDInet_Inference.py should be used using the appropriate flag: --
 REDInet is compatible with every versions of REDItools.  <br />
 
 To note, the REDInet scripts are very lightweigthed. After the required preliminar REDItools steps, these can be easily run on standard machines. The reccomended and tested hardware set-up is: 4 cpus, 16/32 GB RAM. The computation time is roughly 30 minutes per REDItools table (but it strictly depends on the sequencing depth). REDInet scripts were also successfully tested on Apple M3 Pro. No GPU acceleration is requested.
- 
+
+
+<br><be><br><br>
+ Shield: [![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial 4.0 International License][cc-by-nc].
+
+[![CC BY-NC 4.0][cc-by-nc-image]][cc-by-nc]
+
+[cc-by-nc]: https://creativecommons.org/licenses/by-nc/4.0/
+[cc-by-nc-image]: https://licensebuttons.net/l/by-nc/4.0/88x31.png
+[cc-by-nc-shield]: https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg
+
+
+This work is licensed under the Creative Commons Attribution - Non-Commercial 4.0 International License (CC BY-NC 4.0).
+For any commercial use or license request for market activities, interested parties are invited to contact the Technology Transfer Office (TTO) of the University of Bari Aldo Moro, copyright holder. For a copy of the license, please visit https://creativecommons.org/licenses/by-nc/4.0/
+
