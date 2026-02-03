@@ -15,7 +15,7 @@ REDInet runs on Tabix indexed REDItools output tables. <br />
            https://github.com/BioinfoUNIBA/REDItools3
 
 
-Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environments. <br />
+Both REDInet and REDItools should be installed in dedicated Anaconda or Miniconda environments. <br />
 To create the required enviroment:
 
 2) Install Anaconda or Miniconda following the instructions at: <br />
