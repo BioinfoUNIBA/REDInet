@@ -3,9 +3,22 @@ A Temporal Convolutional Network based Python package, inspired by Google DeepMi
 
 ## **Virtual Environment Preparation and Software Installation**:
 REDInet runs on Tabix indexed REDItools output tables. <br />
-Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environment. <br />
+
+1) Dowload and install REDItools. It is suggested to create a distinct environment to install and launch REDItools. Package and installation guides can be found at: <br />
+
+   REDItools (most stable version) <br />
+
+           https://github.com/BioinfoUNIBA/REDItools
+
+   REDItools3 <br />
+
+           https://github.com/BioinfoUNIBA/REDItools3
+
+
+Both REDInet and REDItools should be installed in a dedicated Anacoda or Miniconda environments. <br />
 To create the required enviroment:
-1) Install Anaconda or Miniconda following the instructions at: <br />
+
+2) Install Anaconda or Miniconda following the instructions at: <br />
   Anaconda <br />
             
             https://docs.anaconda.com/free/anaconda/install/linux 
@@ -13,19 +26,19 @@ To create the required enviroment:
      Miniconda <br />
             
             https://docs.anaconda.com/free/miniconda/miniconda-install
-2) Create the virtual environment with Python version 3.9.0: <br />
+3) Create the virtual environment with Python version 3.9.0: <br />
 
        conda create --name REDInet python=3.9.0
    
-3) Activate the virtual environment: <br />
+4) Activate the virtual environment: <br />
 
        conda activate REDInet
 
-4) Install Samtools: <br />
+5) Install Samtools: <br />
 
        conda install bioconda::samtools 
 
-5) Install python required packages: <br />
+6) Install python required packages: <br />
 
        pip install numpy==1.26.4
        pip install pandas==2.2.2
@@ -33,28 +46,13 @@ To create the required enviroment:
        pip install scikit-learn==1.4.2
        pip install tqdm==4.66.2
        pip install tensorflow[and-cuda]==2.14.0
-
-7) Dowload and install REDItools. Package and installation guide at: <br />
-   REDItools <br />
-
-           https://github.com/BioinfoUNIBA/REDItools
    
-   REDItools2 <br />
+7) Create a REDInet dedicated folder and REDInet package download: <br />
 
-           https://github.com/BioinfoUNIBA/REDItools2
+       git clone https://github.com/BioinfoUNIBA/REDInet.git 
+       cd REDInet/Package
    
-   REDItools3 <br />
-
-           https://github.com/BioinfoUNIBA/REDItools3
-   
-8) Create a REDInet dedicated folder and REDInet package download: <br />
-
-       mkdir REDInet
-       cd REDInet
-       wget https://github.com/BioinfoUNIBA/REDInet/tree/main/Package
-       cd Package
-   
-9) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
+8) Download and prepare GRCh37 and GRCh38 reference genomes: <br />
 
        cd Utilities
    
@@ -70,7 +68,7 @@ To create the required enviroment:
    
        samtools faidx GRCh37.primary_assembly.genome.fa
    
-10) Make REDInet inference scripts executable:
+9) Make REDInet inference scripts executable:
 
         chmod u+x REDInet_Inference.py
         chmod u+x REDInet_Inference_light_ver.py
