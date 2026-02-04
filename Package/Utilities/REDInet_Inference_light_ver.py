@@ -114,6 +114,10 @@ def CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepa
             srr_interval["Position"] = srr_interval["Position"].astype("int")
             # retrieve inferred strand
             strand = site.Strand
+            # PATCH TO MEET LATEST REDITOOL3 OUTPUT FORMAT
+            if strand in ["+", "-"]:
+                if strand == "+": strand = "1"
+                else: strand = "0"
             # assess wheter interval is of the required length and if the entire interval is on the same strand
             if len(set(srr_interval["Strand"])) == 1 and strand in ["0","1"]: # and avoid unstranded sites (0 --> minus strand; 1 --> plus strand)
                 tabix_int_len = srr_interval.shape[0]
@@ -190,7 +194,7 @@ def CNN_inference(reditable_filepath, model_filepath, output_table_prefix_filepa
     model = tf.keras.models.load_model(model_filepath)
     y_hat_proba = model.predict(X_3d_log2, batch_size=100)
     #print("DEBUG - y_hat_proba:\n", y_hat_proba)
-    # adapt y_hat_proba for models with single node output (signmoid activation function)
+    # adapt y_hat_proba for models with single node output (sigmoid activation function)
     if y_hat_proba.shape[1] == 1:
         y_hat_proba_snp = 1.0 - y_hat_proba
         y_hat_proba_ed = y_hat_proba
